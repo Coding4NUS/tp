@@ -3,8 +3,8 @@ package seedu.address.testutil;
 import java.util.HashSet;
 import java.util.Set;
 
-import seedu.address.model.person.MatricNumber;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.MatricNumber;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
@@ -19,7 +19,7 @@ public class PersonBuilder {
     public static final String DEFAULT_NAME = "Amy Bee";
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
-    public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
+    public static final String DEFAULT_MATRIC_NUMBER = "A0505123N";
 
     private Name name;
     private Phone phone;
@@ -34,7 +34,7 @@ public class PersonBuilder {
         name = new Name(DEFAULT_NAME);
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
-        matricNumber = new MatricNumber(DEFAULT_ADDRESS);
+        matricNumber = new MatricNumber(DEFAULT_MATRIC_NUMBER);
         tags = new HashSet<>();
     }
 
@@ -66,10 +66,10 @@ public class PersonBuilder {
     }
 
     /**
-     * Sets the {@code Address} of the {@code Person} that we are building.
+     * Sets the {@code MatricNumber} of the {@code Person} that we are building.
      */
-    public PersonBuilder withAddress(String address) {
-        this.matricNumber = new MatricNumber(address);
+    public PersonBuilder withMatricNumber(String matricNumber) {
+        this.matricNumber = new MatricNumber(matricNumber);
         return this;
     }
 
