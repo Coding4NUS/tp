@@ -71,7 +71,7 @@ public class Person {
         }
 
         return otherPerson != null
-                && otherPerson.getMatricNumber().equals(getMatricNumber());
+                && otherPerson.getMatricNumber().value.equalsIgnoreCase(getMatricNumber().value);
     }
 
     /**

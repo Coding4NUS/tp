@@ -24,7 +24,7 @@ public class MatricNumberTest {
         // null address
         assertThrows(NullPointerException.class, () -> MatricNumber.isValidMatricNumber(null));
 
-        // invalid addresses
+        // invalid matriculation numbers
         assertFalse(MatricNumber.isValidMatricNumber("")); // empty string
         assertFalse(MatricNumber.isValidMatricNumber(" ")); // spaces only
         assertFalse(MatricNumber.isValidMatricNumber("B1234567N")); //starts with `B`
@@ -33,8 +33,11 @@ public class MatricNumberTest {
         assertFalse(MatricNumber.isValidMatricNumber("A123456Z")); //has 6 digits
         assertFalse(MatricNumber.isValidMatricNumber("A0N")); // 1 digit
         assertFalse(MatricNumber.isValidMatricNumber("AZ")); //no digits
+        assertFalse(MatricNumber.isValidMatricNumber("A1234567N ")); // trailing space
+        assertFalse(MatricNumber.isValidMatricNumber(" A1234567N")); // leading space
+        assertFalse(MatricNumber.isValidMatricNumber("A1234 567N")); // space in the middle
 
-        // valid addresses
+        // valid matriculation numbers
         assertTrue(MatricNumber.isValidMatricNumber("A4433221B"));
         assertTrue(MatricNumber.isValidMatricNumber("A0000000A")); // all same digits
         assertTrue(MatricNumber.isValidMatricNumber("A4455667A")); // ends with `A`

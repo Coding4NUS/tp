@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_MATRIC_NUMBER_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_MATRIC_NUMBER_BOB_LOWERCASE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
@@ -43,6 +44,10 @@ public class PersonTest {
 
         // name differs in case, but matriculation number is same -> returns true
         Person editedBob = new PersonBuilder(BOB).withName(VALID_NAME_BOB.toLowerCase()).build();
+        assertTrue(BOB.isSamePerson(editedBob));
+
+        //different case for matriculation number -> returns true
+        editedBob = new PersonBuilder(BOB).withMatricNumber(VALID_MATRIC_NUMBER_BOB_LOWERCASE).build();
         assertTrue(BOB.isSamePerson(editedBob));
     }
 
