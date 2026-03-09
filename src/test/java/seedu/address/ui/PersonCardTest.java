@@ -3,21 +3,12 @@ package seedu.address.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javafx.application.Platform;
 import seedu.address.model.person.Person;
 import seedu.address.testutil.PersonBuilder;
 
-public class PersonCardTest {
-
-    @BeforeAll
-    public static void setUpJavaFx() {
-        Platform.startup(() -> {
-        });
-    }
-
+public class PersonCardTest extends UiTestBase {
 
     @Test
     public void constructor_personCardCreated_returnsNotNull() {
