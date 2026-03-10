@@ -9,8 +9,8 @@ import java.util.Set;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.MatricNumber;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
@@ -66,18 +66,18 @@ public class ParserUtil {
     }
 
     /**
-     * Parses a {@code String address} into an {@code Address}.
+     * Parses a {@code String matriculation number} into an {@code MatricNumber}.
      * Leading and trailing whitespaces will be trimmed.
      *
-     * @throws ParseException if the given {@code address} is invalid.
+     * @throws ParseException if the given {@code matriculation number} is invalid.
      */
-    public static Address parseAddress(String address) throws ParseException {
-        requireNonNull(address);
-        String trimmedAddress = address.trim();
-        if (!Address.isValidAddress(trimmedAddress)) {
-            throw new ParseException(Address.MESSAGE_CONSTRAINTS);
+    public static MatricNumber parseMatricNumber(String matricNumber) throws ParseException {
+        requireNonNull(matricNumber);
+        String trimmedMatricNumber = matricNumber.trim();
+        if (!MatricNumber.isValidMatricNumber(trimmedMatricNumber)) {
+            throw new ParseException(MatricNumber.MESSAGE_CONSTRAINTS);
         }
-        return new Address(trimmedAddress);
+        return new MatricNumber(trimmedMatricNumber);
     }
 
     /**
