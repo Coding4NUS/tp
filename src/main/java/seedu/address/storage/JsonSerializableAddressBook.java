@@ -22,6 +22,7 @@ class JsonSerializableAddressBook {
 
     public static final String MESSAGE_DUPLICATE_PERSON = "Persons list contains duplicate person(s).";
     public static final String MESSAGE_DUPLICATE_CLASS_SPACE = "Class space list contains duplicate class space(s).";
+    public static final String MESSAGE_INVALID_MATRICULATION_NUMBER = "Invalid matriculation number.";
 
     private final List<JsonAdaptedPerson> persons = new ArrayList<>();
     private final List<JsonAdaptedClassSpace> classSpaces = new ArrayList<>();
@@ -67,17 +68,25 @@ class JsonSerializableAddressBook {
         }
 
         for (JsonAdaptedPerson jsonAdaptedPerson : persons) {
-            Person person = jsonAdaptedPerson.toModelType();
-            if (addressBook.hasPerson(person)) {
-                throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
-            }
-            for (var classSpaceName : person.getClassSpaces()) {
-                ClassSpace classSpace = new ClassSpace(classSpaceName);
-                if (!addressBook.hasClassSpace(classSpace)) {
-                    addressBook.addClassSpace(classSpace);
+            try {
+                Person person = jsonAdaptedPerson.toModelType();
+                if (addressBook.hasPerson(person)) {
+                    System.err.println(MESSAGE_DUPLICATE_PERSON); //TODO: change error message
+                    continue;
                 }
+                for (var classSpaceName : person.getClassSpaces()) {
+                    ClassSpace classSpace = new ClassSpace(classSpaceName);
+                    if (!addressBook.hasClassSpace(classSpace)) {
+                        addressBook.addClassSpace(classSpace);
+                    }
+                }
+                addressBook.addPerson(person);
+            } catch (IllegalValueException e) {
+                System.err.println(MESSAGE_INVALID_MATRICULATION_NUMBER); //TODO: change error message
             }
-            addressBook.addPerson(person);
+
+
+
         }
         return addressBook;
     }
