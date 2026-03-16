@@ -8,7 +8,7 @@ import seedu.address.commons.core.LogsCenter;
 
 /**
  * Represents a Person's matriculation number in the address book.
- * Guarantees: immutable; is valid as declared in {@link #hasValidFormat(String)}
+ * Guarantees: immutable; is valid as declared in {@link #hasValidMatricNumber(String)}
  */
 public class MatricNumber {
 
@@ -160,7 +160,7 @@ public class MatricNumber {
         }
 
         MatricNumber otherMatricNumber = (MatricNumber) other;
-        return value.equalsIgnoreCase(otherMatricNumber.value);
+        return value.equals(otherMatricNumber.value);
     }
 
     @Override
