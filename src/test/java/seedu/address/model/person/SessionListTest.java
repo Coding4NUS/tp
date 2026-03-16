@@ -2,6 +2,7 @@ package seedu.address.model.person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.FIVE_PARTICIPATION;
@@ -24,6 +25,9 @@ public class SessionListTest {
             new Participation(ONE_PARTICIPATION));
     private final Session session2 = new Session(date2, new Attendance(Attendance.Status.ABSENT),
             new Participation(TWO_PARTICIPATION));
+    private final SessionList singleTestSessionList1 = new SessionList(Collections.singletonList(session1));
+    private final SessionList singleTestSessionList2 = new SessionList(Collections.singletonList(session2));
+    private final SessionList doubleTestSessionList = new SessionList(Arrays.asList(session1, session2));
 
     @Test
     public void addSession_newSession_addsSuccessfully() {
@@ -50,39 +54,71 @@ public class SessionListTest {
 
     @Test
     public void getSession_existingDate_returnsSession() {
-        SessionList sessionList = new SessionList(Arrays.asList(session1, session2));
-        Optional<Session> result = sessionList.getSession(date1);
+        Optional<Session> result = doubleTestSessionList.getSession(date1);
         assertTrue(result.isPresent());
         assertEquals(session1, result.get());
     }
 
     @Test
     public void getSession_nonExistentDate_returnsEmpty() {
-        SessionList sessionList = new SessionList(Collections.singletonList(session1));
-        Optional<Session> result = sessionList.getSession(date2);
+        Optional<Session> result = singleTestSessionList1.getSession(date2);
         assertFalse(result.isPresent());
     }
 
     @Test
     public void getAttendance_existingSession_returnsAttendance() {
-        SessionList sessionList = new SessionList(Collections.singletonList(session1));
-        Optional<Attendance> attendance = sessionList.getAttendance(date1);
+        Optional<Attendance> attendance = singleTestSessionList1.getAttendance(date1);
         assertTrue(attendance.isPresent());
         assertEquals(session1.getAttendance(), attendance.get());
     }
 
     @Test
     public void getParticipation_existingSession_returnsParticipation() {
-        SessionList sessionList = new SessionList(Collections.singletonList(session1));
-        Optional<Participation> participation = sessionList.getParticipation(date1);
+        Optional<Participation> participation = singleTestSessionList1.getParticipation(date1);
         assertTrue(participation.isPresent());
         assertEquals(session1.getParticipation(), participation.get());
     }
 
     @Test
     public void getSessions_modifyList_throwsUnsupportedOperationException() {
-        SessionList sessionList = new SessionList(Collections.singletonList(session1));
-        List<Session> unmodifiableList = sessionList.getSessions();
+        List<Session> unmodifiableList = singleTestSessionList2.getSessions();
         assertThrows(UnsupportedOperationException.class, () -> unmodifiableList.add(session2));
+    }
+
+    @Test
+    public void sessionList_iterator_iteratesSucessfully() {
+        int count = 0;
+        for (Session s : doubleTestSessionList) {
+            count++;
+        }
+        assertEquals(2, count);
+    }
+
+    @Test
+    public void equals() {
+        SessionList list1Copy = new SessionList(Collections.singletonList(session1));
+
+        // null -> returns false.
+        assertFalse(singleTestSessionList1.equals(null));
+
+        // same session (copy of session) -> returns true.
+        assertTrue(singleTestSessionList1.equals(list1Copy));
+
+        // same object -> returns true.
+        assertTrue(singleTestSessionList1.equals(singleTestSessionList1));
+
+        // different sessions -> returns false.
+        assertFalse(singleTestSessionList1.equals(singleTestSessionList2));
+
+        // Different types.
+        assertFalse(singleTestSessionList1.equals(1));
+
+    }
+
+    @Test
+    public void hashCode_test() {
+        assertEquals(singleTestSessionList1, singleTestSessionList1);
+        assertEquals(singleTestSessionList2, singleTestSessionList2);
+        assertNotEquals(singleTestSessionList1, singleTestSessionList2);
     }
 }

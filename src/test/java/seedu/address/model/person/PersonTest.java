@@ -114,7 +114,7 @@ public class PersonTest {
                 new Participation(FIVE_PARTICIPATION));
         Person updatedPerson = originalPerson.withUpdatedSession(testClassSpaceGroup, updatedSession);
 
-        // Check that the person was updated correctly
+        // Check that the person was updated correctly.
         assertFalse(originalPerson.equals(updatedPerson));
         assertEquals(updatedSession, updatedPerson.getOrCreateSession(testClassSpaceGroup, date));
         assertEquals(1, updatedPerson.getClassSpaceSessions().get(testClassSpaceGroup).getSessions().size());
@@ -122,7 +122,7 @@ public class PersonTest {
 
     @Test
     public void equals_differentSessionMaps_returnsFalse() {
-        // Two persons, one with a session and one without
+        // Two persons, one with a session and one without.
         Person personWithSession = new PersonBuilder(ALICE).build()
                 .withUpdatedSession(testClassSpaceGroup, new Session(LocalDate.now(),
                         new Attendance(Attendance.Status.PRESENT), new Participation(ONE_PARTICIPATION)));
