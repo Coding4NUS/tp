@@ -92,7 +92,8 @@ public class EditCommandParserTest {
     public void parse_invalidValue_failure() {
         assertParseFailure(parser, INDEX_FIRST + INVALID_NAME_DESC, Name.MESSAGE_CONSTRAINTS); // invalid name
         assertParseFailure(parser, INDEX_FIRST + INVALID_PHONE_DESC, Phone.MESSAGE_CONSTRAINTS); // invalid phone
-        assertParseFailure(parser, INDEX_FIRST + INVALID_EMAIL_DESC, Email.MESSAGE_CONSTRAINTS); // invalid email
+        assertParseFailure(parser, INDEX_FIRST + INVALID_EMAIL_DESC,
+                Email.getDiagnosticMessage(INVALID_EMAIL_DESC)); // invalid email
         assertParseFailure(parser, INDEX_FIRST + INVALID_MATRIC_NUMBER_DESC,
                 MatricNumber.MESSAGE_CONSTRAINTS); // invalid matriculation number
         assertParseFailure(parser, INDEX_FIRST + INVALID_TAG_DESC, Tag.MESSAGE_CONSTRAINTS); // invalid tag

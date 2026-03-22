@@ -1,6 +1,7 @@
 package seedu.address.model.person;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
 
@@ -84,5 +85,43 @@ public class EmailTest {
 
         // different values -> returns false
         assertFalse(email.equals(new Email("other.valid@email")));
+    }
+
+    @Test
+    public void getDiagnosticMessage_specificIssues_returnsHelpfulMessage() {
+        // missing '@'.
+        String msgNoAt = Email.getDiagnosticMessage("peterjackexample.com");
+        assertTrue(msgNoAt.contains("@"));
+
+        // multiple '@'.
+        String msgMultiAt = Email.getDiagnosticMessage("peter@@example.com");
+        assertTrue(msgMultiAt.contains("more than one"));
+
+        // missing local part.
+        String msgNoLocal = Email.getDiagnosticMessage("@example.com");
+        assertTrue(msgNoLocal.contains("local-part"));
+        // missing domain.
+        String msgNoDomain = Email.getDiagnosticMessage("peterjack@");
+        assertTrue(msgNoDomain.contains("domain"));
+
+        // domain missing '.'
+        String msgNoDot = Email.getDiagnosticMessage("peterjack@examplecom");
+        assertTrue(msgNoDot.contains("."));
+
+        // TLD too short.
+        String msgShortTld = Email.getDiagnosticMessage("peterjack@example.c");
+        assertTrue(msgShortTld.contains("2 characters"));
+
+        // local part starts with special character.
+        String msgBadStart = Email.getDiagnosticMessage("-peterjack@example.com");
+        assertTrue(msgBadStart.contains("start"));
+
+        // local part ends with special character.
+        String msgBadEnd = Email.getDiagnosticMessage("peterjack-@example.com");
+        assertTrue(msgBadEnd.contains("end"));
+
+        // each case produces a distinct, specific message.
+        assertNotEquals(msgNoAt, msgMultiAt);
+        assertNotEquals(msgNoLocal, msgNoDomain);
     }
 }
