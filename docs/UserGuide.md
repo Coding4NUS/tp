@@ -191,9 +191,9 @@ Adds one or more students to a class space. Students can be identified either by
 Format: `addtogroup g/GROUP_NAME m/MATRIC_NUMBER [m/MATRIC_NUMBER]` `addtogroup g/GROUP_NAME i/INDEX_EXPRESSION [i/INDEX_EXPRESSION]`
 
 For index expressions, supports forms like:
-* i/1 
-* i/1,2,4 
-* i/1-4 
+* i/1
+* i/1,2,4
+* i/1-4
 * i/1,3-5
 
 Examples:
@@ -267,22 +267,22 @@ Examples:
 
 ### Enter attendance view : `attview`
 
-Shows the list of students with that attendance status for the tutorial group in current view on that date. 
+Shows the list of students with that attendance status for the tutorial group in current view on that date.
 
-Format: `attview STATUS d/YYYY-MM-DD` 
+Format: `attview STATUS d/YYYY-MM-DD`
 
 After entering attendance view for a session, you can use shorthand follow-up commands without repeating the date/group:
-* mark i/1 
-* unmark i/1 
+* mark i/1
+* unmark i/1
 * part i/1 pv/4
 
 You can still use the full forms if needed:
-* mark i/1 d/2026-03-16 
-* unmark i/1 d/2026-03-16 
+* mark i/1 d/2026-03-16
+* unmark i/1 d/2026-03-16
 * part i/1 d/2026-03-16 pv/4
 
 **Tip:** Not including STATUS as a parameter shows:
-* attendance status as [ ] Absent, [X] Present, [-] Uninitialised 
+* attendance status as [ ] Absent, [X] Present, [-] Uninitialised
 * class participation score
 
 Examples:
@@ -294,11 +294,11 @@ Creates an assignment for people in the group in current view with a due date an
 
 Format: `createassignment a/ASSIGNMENT_NAME d/DUE_DATE mm/MAX_MARKS` `createa a/ASSIGNMENT_NAME d/DUE_DATE mm/MAX_MARKS`
 
-* assignments are unique within a class space 
-* the same assignment name can exist in different class spaces 
-* when a student is added to a class, they automatically show all class assignments as ungraded 
-* when a student is removed from a class, their grades for that class’s assignments are removed 
-* when a class is deleted, its assignments and grades are deleted too 
+* assignments are unique within a class space
+* the same assignment name can exist in different class spaces
+* when a student is added to a class, they automatically show all class assignments as ungraded
+* when a student is removed from a class, their grades for that class’s assignments are removed
+* when a class is deleted, its assignments and grades are deleted too
 * when a class is renamed, its assignments and grades stay attached
 
 Examples:
@@ -340,7 +340,7 @@ Grades an assignment for people in the group in current view.
 
 Format: `gradeassignment a/ASSIGNMENT_NAME i/INDEX_EXPRESSION [i/INDEX_EXPRESSION] gr/GRADE` `gradeassignment a/ASSIGNMENT_NAME m/MATRICULATION_NUMBER [m/MATRICULATION_NUMBER] gr/GRADE` `gradea a/ASSIGNMENT_NAME i/INDEX_EXPRESSION [i/INDEX_EXPRESSION] gr/GRADE` `gradea a/ASSIGNMENT_NAME m/MATRICULATION_NUMBER [m/MATRICULATION_NUMBER] gr/GRADE`
 
-* grade must be between 0 and max marks 
+* grade must be between 0 and max marks
 * grading again overwrites the old grade
 
 Examples:
