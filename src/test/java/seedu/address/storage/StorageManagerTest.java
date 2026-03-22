@@ -65,4 +65,37 @@ public class StorageManagerTest {
         assertNotNull(storageManager.getAddressBookFilePath());
     }
 
+    @Test
+    public void getLastLoadWarnings_jsonAddressBookStorage_returnsWarnings() {
+        // storageManager in setUp() is already initialized with JsonAddressBookStorage
+        assertEquals(java.util.List.of(), storageManager.getLastLoadWarnings());
+    }
+
+    @Test
+    public void getLastLoadWarnings_notJsonAddressBookStorage_returnsEmptyList() {
+        AddressBookStorage stubStorage = new AddressBookStorage() {
+            @Override
+            public Path getAddressBookFilePath() {
+                return null;
+            }
+            @Override
+            public java.util.Optional<seedu.address.model.ReadOnlyAddressBook> readAddressBook() {
+                return java.util.Optional.empty();
+            }
+            @Override
+            public java.util.Optional<seedu.address.model.ReadOnlyAddressBook> readAddressBook(Path filePath) {
+                return java.util.Optional.empty();
+            }
+            @Override
+            public void saveAddressBook(seedu.address.model.ReadOnlyAddressBook addressBook) { }
+            @Override
+            public void saveAddressBook(seedu.address.model.ReadOnlyAddressBook addressBook,
+                                                  Path filePath) { }
+        };
+
+        StorageManager manager = new StorageManager(stubStorage,
+                new JsonUserPrefsStorage(java.nio.file.Paths.get("dummy")));
+        assertEquals(java.util.List.of(), manager.getLastLoadWarnings());
+    }
+
 }

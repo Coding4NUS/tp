@@ -6,8 +6,11 @@ import static seedu.address.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.JsonUtil;
@@ -149,6 +152,17 @@ public class JsonSerializableAddressBookTest {
                 dataFromFile::toModelType);
     }
 
+    @Test
+    public void constructor_nullLists_doesNotThrow() throws Exception {
+        // Force the "if (persons != null)" to evaluate to false
+        JsonSerializableAddressBook serializable = new JsonSerializableAddressBook(
+                (List<JsonNode>) null, (List<JsonAdaptedClassSpace>) null);
+
+        AddressBook addressBook = serializable.toModelType();
+        assertEquals(0, addressBook.getPersonList().size());
+        assertEquals(0, addressBook.getClassSpaceList().size());
+    }
+
     /**
      * Helper method to read JSON file and assert that it produces "missing name" warning.
      *
@@ -165,3 +179,4 @@ public class JsonSerializableAddressBookTest {
         assertEquals(0, dataFromFile.toModelType().getPersonList().size());
     }
 }
+
