@@ -43,6 +43,9 @@ public class ExportViewCommand extends Command {
         this(DEFAULT_FILE_NAME);
     }
 
+    /**
+     * Creates an export command targeting the given file path.
+     */
     public ExportViewCommand(String filePath) {
         requireNonNull(filePath);
         this.filePath = filePath.trim().isEmpty() ? DEFAULT_FILE_NAME : filePath.trim();

@@ -16,6 +16,9 @@ public final class SessionCommandHistory {
 
     private SessionCommandHistory() {}
 
+    /**
+     * Records the current model state so the last session-related mutation can be undone.
+     */
     public static void record(Model model, String description) {
         lastSnapshot = new SessionCommandSnapshot(
                 new AddressBook(model.getAddressBook()),
@@ -35,6 +38,9 @@ public final class SessionCommandHistory {
         lastSnapshot = null;
     }
 
+    /**
+     * Snapshot of the state needed to undo a session-related command.
+     */
     public record SessionCommandSnapshot(ReadOnlyAddressBook addressBook,
                                          Optional<ClassSpaceName> activeClassSpaceName,
                                          Optional<LocalDate> activeSessionDate,

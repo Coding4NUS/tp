@@ -48,6 +48,9 @@ public class DeleteSessionCommand extends Command {
         this(sessionDate, Optional.of(classSpaceName), false);
     }
 
+    /**
+     * Creates a delete-session command with optional class space and confirmation state.
+     */
     public DeleteSessionCommand(LocalDate sessionDate, Optional<ClassSpaceName> classSpaceName, boolean confirmed) {
         requireNonNull(sessionDate);
         requireNonNull(classSpaceName);

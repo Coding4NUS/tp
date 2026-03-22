@@ -32,7 +32,9 @@ public class UndoSessionCommand extends Command {
             model.clearActiveSessionDate();
         }
         if (snapshot.visibleRangeStart().isPresent() || snapshot.visibleRangeEnd().isPresent()) {
-            model.setVisibleSessionRange(snapshot.visibleRangeStart().orElse(null), snapshot.visibleRangeEnd().orElse(null));
+            model.setVisibleSessionRange(
+                    snapshot.visibleRangeStart().orElse(null),
+                    snapshot.visibleRangeEnd().orElse(null));
         } else {
             model.clearVisibleSessionRange();
         }

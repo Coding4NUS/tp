@@ -372,6 +372,11 @@ public class Person {
         return getOrCreateSession(classSpaceName, date).getParticipation();
     }
 
+    // TODO: Remove. This is legacy from pre-Session class.
+    public Participation getParticipation() {
+        return participation;
+    }
+
     /**
      * Returns the note for the specified class space and session date.
      * If the session does not exist, returns an empty note.
@@ -379,11 +384,6 @@ public class Person {
     public String getSessionNote(ClassSpaceName classSpaceName, LocalDate date) {
         requireAllNonNull(classSpaceName, date);
         return getOrCreateSession(classSpaceName, date).getNote();
-    }
-
-    // TODO: Remove. This is legacy from pre-Session class.
-    public Participation getParticipation() {
-        return participation;
     }
 
     /**

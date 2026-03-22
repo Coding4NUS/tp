@@ -36,7 +36,8 @@ import seedu.address.model.person.SessionList;
  */
 public class PersonListPanel extends UiPart<Region> {
     private static final String FXML = "PersonListPanel.fxml";
-    private static final DateTimeFormatter MATRIX_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMM", Locale.ENGLISH);
+    private static final DateTimeFormatter MATRIX_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd MMM", Locale.ENGLISH);
     private static final DateTimeFormatter MATRIX_TITLE_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
     private static final DateTimeFormatter COMMAND_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -165,7 +166,9 @@ public class PersonListPanel extends UiPart<Region> {
                 ? activeSessionDate
                 : (sessionDates.isEmpty() ? null : sessionDates.get(0));
 
-        String activeSessionNote = activeSessionDate == null ? "" : getSessionNote(activeClassSpaceName, activeSessionDate);
+        String activeSessionNote = activeSessionDate == null
+                ? ""
+                : getSessionNote(activeClassSpaceName, activeSessionDate);
         attendanceMatrixTitle.setText(buildMatrixTitle(activeClassSpaceName, activeSessionDate));
         attendanceMatrixSubtitle.setText(buildMatrixSubtitle(activeSessionDate, activeSessionNote));
         populateMatrixMeta(personList.size(), sessionDates.size(), activeSessionDate, activeSessionNote);
@@ -270,6 +273,7 @@ public class PersonListPanel extends UiPart<Region> {
             case PRESENT -> presentCount++;
             case ABSENT -> absentCount++;
             case UNINITIALISED -> uninitialisedCount++;
+            default -> throw new IllegalStateException("Unexpected attendance status: " + attendance.value);
             }
         }
 

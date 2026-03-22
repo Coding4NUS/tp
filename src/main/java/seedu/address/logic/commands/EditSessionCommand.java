@@ -48,6 +48,9 @@ public class EditSessionCommand extends Command {
         this(originalDate, Optional.of(newDate), Optional.empty(), Optional.of(classSpaceName));
     }
 
+    /**
+     * Creates an edit-session command that can update the date, the note, or both.
+     */
     public EditSessionCommand(LocalDate originalDate, Optional<LocalDate> newDate,
                               Optional<String> newNote, Optional<ClassSpaceName> classSpaceName) {
         requireNonNull(originalDate);
@@ -115,14 +118,18 @@ public class EditSessionCommand extends Command {
                 continue;
             }
 
-            Session updatedSession = new Session(targetDate, originalSession.get().getAttendance(),
-                    originalSession.get().getParticipation(), newNote.orElse(originalSession.get().getNote()));
+            Session updatedSession = new Session(
+                    targetDate,
+                    originalSession.get().getAttendance(),
+                    originalSession.get().getParticipation(),
+                    newNote.orElse(originalSession.get().getNote()));
             Person updatedPerson = person.withoutSession(targetClassSpace, originalDate)
                     .withUpdatedSession(targetClassSpace, updatedSession);
             model.setPerson(person, updatedPerson);
         }
 
-        if (model.getActiveSessionDate().filter(originalDate::equals).isPresent() && !targetDate.equals(originalDate)) {
+        if (model.getActiveSessionDate().filter(originalDate::equals).isPresent()
+                && !targetDate.equals(originalDate)) {
             model.setActiveSessionDate(targetDate);
         }
 
