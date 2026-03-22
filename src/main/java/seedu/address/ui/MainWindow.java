@@ -111,8 +111,11 @@ public class MainWindow extends UiPart<Stage> {
      */
     void fillInnerParts() {
         personListPanel = new PersonListPanel(logic.getFilteredPersonList(),
+                logic.getAddressBook().getPersonList(),
                 logic.getAddressBook().getClassSpaceList(), logic.attendanceViewActiveProperty(),
-                logic.activeClassSpaceNameProperty(), logic.activeSessionDateProperty());
+                logic.activeClassSpaceNameProperty(), logic.activeSessionDateProperty(),
+                logic.visibleSessionRangeStartProperty(), logic.visibleSessionRangeEndProperty(),
+                this::executeCommand);
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();

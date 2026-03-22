@@ -156,6 +156,33 @@ public class Person {
     }
 
     /**
+     * Returns a copy of the {@code Person} with the specified session removed from the class space.
+     */
+    public Person withoutSession(ClassSpaceName classSpaceName, LocalDate date) {
+        requireAllNonNull(classSpaceName, date);
+        Map<ClassSpaceName, SessionList> updatedSessionMap = copySessionMap(this.classSpaceSessions);
+        SessionList currentSessionList = updatedSessionMap.get(classSpaceName);
+        if (currentSessionList == null) {
+            return this;
+        }
+
+        SessionList newSessionList = new SessionList(currentSessionList.getSessions());
+        boolean removed = newSessionList.removeSession(date);
+        if (!removed) {
+            return this;
+        }
+
+        if (newSessionList.getSessions().isEmpty()) {
+            updatedSessionMap.remove(classSpaceName);
+        } else {
+            updatedSessionMap.put(classSpaceName, newSessionList);
+        }
+
+        return new Person(this.name, this.phone, this.email, this.matricNumber, this.tags, this.classSpaces,
+                this.attendance, this.participation, updatedSessionMap, this.assignmentGrades);
+    }
+
+    /**
      * Returns a copy of the {@code Person} with the given assignment grade added or overwritten.
      */
     public Person withUpdatedAssignmentGrade(ClassSpaceName classSpaceName, AssignmentName assignmentName, int grade) {
@@ -295,7 +322,7 @@ public class Person {
         return classSpaceSessions.getOrDefault(classSpaceName, new SessionList())
                 .getSession(date)
                 .orElseGet(() -> new Session(date,
-                        new Attendance(Attendance.Status.UNINITIALISED), new Participation(0)));
+                        new Attendance(Attendance.Status.UNINITIALISED), new Participation(0), ""));
     }
 
     public Name getName() {
@@ -343,6 +370,15 @@ public class Person {
     public Participation getParticipation(ClassSpaceName classSpaceName, LocalDate date) {
         requireAllNonNull(classSpaceName, date);
         return getOrCreateSession(classSpaceName, date).getParticipation();
+    }
+
+    /**
+     * Returns the note for the specified class space and session date.
+     * If the session does not exist, returns an empty note.
+     */
+    public String getSessionNote(ClassSpaceName classSpaceName, LocalDate date) {
+        requireAllNonNull(classSpaceName, date);
+        return getOrCreateSession(classSpaceName, date).getNote();
     }
 
     // TODO: Remove. This is legacy from pre-Session class.

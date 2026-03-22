@@ -172,4 +172,22 @@ public interface Model {
 
     /** Returns the attendance view mode property. */
     ReadOnlyBooleanProperty attendanceViewActiveProperty();
+
+    /** Returns the visible session range start, if any. */
+    Optional<LocalDate> getVisibleSessionRangeStart();
+
+    /** Returns the visible session range end, if any. */
+    Optional<LocalDate> getVisibleSessionRangeEnd();
+
+    /** Sets the visible session range. Null values clear the respective bound. */
+    void setVisibleSessionRange(LocalDate startDate, LocalDate endDate);
+
+    /** Clears the visible session range. */
+    void clearVisibleSessionRange();
+
+    /** Returns the visible session range start property. */
+    ReadOnlyObjectProperty<LocalDate> visibleSessionRangeStartProperty();
+
+    /** Returns the visible session range end property. */
+    ReadOnlyObjectProperty<LocalDate> visibleSessionRangeEndProperty();
 }

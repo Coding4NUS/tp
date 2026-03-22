@@ -40,8 +40,10 @@ public class PartCommand extends Command {
 
     public static final String MESSAGE_NO_ACTIVE_CLASS_SPACE =
             "No class space selected. Enter a class space first or provide g/CLASS_SPACE.";
+    public static final String MESSAGE_REQUIRES_GROUP_VIEW =
+            "Update participation from a class space view only. Use switchgroup g/GROUP_NAME first.";
     public static final String MESSAGE_NO_ACTIVE_SESSION =
-            "No session selected. Provide d/YYYY-MM-DD or run attview with d/YYYY-MM-DD first.";
+            "No session selected. Provide d/YYYY-MM-DD or run view with d/YYYY-MM-DD first.";
 
     private final Index targetIndex;
     private final Optional<LocalDate> date;
@@ -72,6 +74,10 @@ public class PartCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
+        if (model.getActiveClassSpaceName().isEmpty()) {
+            throw new CommandException(MESSAGE_REQUIRES_GROUP_VIEW);
+        }
+
         // Step 1: switch class space if g/ provided
         if (classSpaceName.isPresent()) {
             ClassSpaceName targetName = classSpaceName.get();
@@ -96,6 +102,8 @@ public class PartCommand extends Command {
             throw new CommandException(MESSAGE_NO_ACTIVE_SESSION);
         }
         LocalDate targetDate = resolvedDate.get();
+        SessionCommandHistory.record(model,
+                COMMAND_WORD + " i/" + targetIndex.getOneBased() + " d/" + targetDate + " pv/" + participation.value);
 
         // Step 3: get person
         List<Person> lastShownList = model.getFilteredPersonList();
@@ -113,7 +121,8 @@ public class PartCommand extends Command {
         Session updatedSession = new Session(
                 targetDate,
                 currentSession.getAttendance(),
-                participation
+                participation,
+                currentSession.getNote()
         );
 
         // Step 6: update person

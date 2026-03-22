@@ -35,8 +35,10 @@ public class MarkCommand extends Command {
 
     public static final String MESSAGE_NO_ACTIVE_CLASS_SPACE =
             "No class space selected. Enter a class space first or provide g/CLASS_SPACE.";
+    public static final String MESSAGE_REQUIRES_GROUP_VIEW =
+            "Mark attendance from a class space view only. Use switchgroup g/GROUP_NAME first.";
     public static final String MESSAGE_NO_ACTIVE_SESSION =
-            "No session selected. Provide d/YYYY-MM-DD or run attview with d/YYYY-MM-DD first.";
+            "No session selected. Provide d/YYYY-MM-DD or run view with d/YYYY-MM-DD first.";
 
     public static final String MESSAGE_CLASS_SPACE_NOT_FOUND =
             "This class space does not exist.";
@@ -64,6 +66,10 @@ public class MarkCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
+        if (model.getActiveClassSpaceName().isEmpty()) {
+            throw new CommandException(MESSAGE_REQUIRES_GROUP_VIEW);
+        }
+
         // Step 1: switch class space if g/ provided
         if (classSpaceName.isPresent()) {
             ClassSpaceName targetName = classSpaceName.get();
@@ -88,6 +94,7 @@ public class MarkCommand extends Command {
             throw new CommandException(MESSAGE_NO_ACTIVE_SESSION);
         }
         LocalDate targetDate = resolvedDate.get();
+        SessionCommandHistory.record(model, COMMAND_WORD + " i/" + targetIndex.getOneBased() + " d/" + targetDate);
 
         // Step 3: get person
         List<Person> lastShownList = model.getFilteredPersonList();
@@ -105,7 +112,8 @@ public class MarkCommand extends Command {
         Session updatedSession = new Session(
                 targetDate,
                 new Attendance(Attendance.Status.PRESENT),
-                currentSession.getParticipation()
+                currentSession.getParticipation(),
+                currentSession.getNote()
         );
 
         // Step 6: update person

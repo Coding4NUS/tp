@@ -37,6 +37,8 @@ public class ModelManager implements Model {
     private final SimpleBooleanProperty attendanceViewActive;
     private final SimpleObjectProperty<ClassSpaceName> activeClassSpaceName;
     private final SimpleObjectProperty<LocalDate> activeSessionDate;
+    private final SimpleObjectProperty<LocalDate> visibleSessionRangeStart;
+    private final SimpleObjectProperty<LocalDate> visibleSessionRangeEnd;
 
     private Predicate<Person> currentAdditionalPredicate;
 
@@ -55,6 +57,8 @@ public class ModelManager implements Model {
         attendanceViewActive = new SimpleBooleanProperty(false);
         activeClassSpaceName = new SimpleObjectProperty<>();
         activeSessionDate = new SimpleObjectProperty<>();
+        visibleSessionRangeStart = new SimpleObjectProperty<>();
+        visibleSessionRangeEnd = new SimpleObjectProperty<>();
         currentAdditionalPredicate = PREDICATE_SHOW_ALL_PERSONS;
         refreshFilteredPersonList();
     }
@@ -213,6 +217,7 @@ public class ModelManager implements Model {
     public void switchToAllStudentsView() {
         activeClassSpaceName.set(null);
         clearActiveSessionDate();
+        clearVisibleSessionRange();
         currentAdditionalPredicate = PREDICATE_SHOW_ALL_PERSONS;
         updateCurrentViewLabel();
         refreshFilteredPersonList();
@@ -276,6 +281,38 @@ public class ModelManager implements Model {
     @Override
     public ReadOnlyBooleanProperty attendanceViewActiveProperty() {
         return attendanceViewActive;
+    }
+
+    @Override
+    public Optional<LocalDate> getVisibleSessionRangeStart() {
+        return Optional.ofNullable(visibleSessionRangeStart.get());
+    }
+
+    @Override
+    public Optional<LocalDate> getVisibleSessionRangeEnd() {
+        return Optional.ofNullable(visibleSessionRangeEnd.get());
+    }
+
+    @Override
+    public void setVisibleSessionRange(LocalDate startDate, LocalDate endDate) {
+        visibleSessionRangeStart.set(startDate);
+        visibleSessionRangeEnd.set(endDate);
+    }
+
+    @Override
+    public void clearVisibleSessionRange() {
+        visibleSessionRangeStart.set(null);
+        visibleSessionRangeEnd.set(null);
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<LocalDate> visibleSessionRangeStartProperty() {
+        return visibleSessionRangeStart;
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<LocalDate> visibleSessionRangeEndProperty() {
+        return visibleSessionRangeEnd;
     }
 
     private void updateCurrentViewLabel() {
