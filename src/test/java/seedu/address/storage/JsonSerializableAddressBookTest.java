@@ -468,5 +468,19 @@ public class JsonSerializableAddressBookTest {
         assertTrue(dataFromFile.getLoadWarnings().get(0).contains("entry #1 (missing name)"));
         assertEquals(0, dataFromFile.toModelType().getPersonList().size());
     }
+
+    private static final Path MISSING_NAME_CLASS_SPACE_FILE =
+            TEST_DATA_FOLDER.resolve("missingNameClassSpaceAddressBook.json");
+
+    @Test
+    public void toModelType_classSpaceWithMissingName_generatesEntryNumberWarning() throws Exception {
+        JsonSerializableAddressBook dataFromFile = JsonUtil.readJsonFile(MISSING_NAME_CLASS_SPACE_FILE,
+                JsonSerializableAddressBook.class).orElseThrow();
+
+        dataFromFile.toModelType();
+
+        assertEquals(1, dataFromFile.getLoadWarnings().size());
+        assertTrue(dataFromFile.getLoadWarnings().get(0).contains("entry #1 (missing name)"));
+    }
 }
 

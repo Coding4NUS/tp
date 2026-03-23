@@ -86,13 +86,9 @@ public class JsonAddressBookStorage implements AddressBookStorage {
             lastSkippedPersons.addAll(serializable.getPreservedSkippedPersons());
             lastSkippedClassSpaces.addAll(serializable.getPreservedSkippedClassSpaces());
             return Optional.of(result);
-        } catch (IllegalValueException ive) {
+        } catch (IllegalValueException | DataLoadingException e) {
             shouldSkipSaveAfterFatalLoad = true;
-            logger.info("Illegal values found in " + filePath + ": " + ive.getMessage());
-            throw new DataLoadingException(ive);
-        } catch (DataLoadingException dle) {
-            shouldSkipSaveAfterFatalLoad = true;
-            throw dle;
+            throw new DataLoadingException(e);
         }
     }
 
