@@ -2,6 +2,8 @@ package seedu.address;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -44,6 +46,7 @@ public class MainApp extends Application {
     protected Storage storage;
     protected Model model;
     protected Config config;
+    private String fatalLoadError = null;
 
     @Override
     public void init() throws Exception {
@@ -63,7 +66,11 @@ public class MainApp extends Application {
 
         logic = new LogicManager(model, storage);
 
-        ui = new UiManager(logic, storage.getLastLoadWarnings());
+        List<String> startupWarnings = new ArrayList<>(storage.getLastLoadWarnings());
+        if (fatalLoadError != null) {
+            startupWarnings.add(0, fatalLoadError);
+        }
+        ui = new UiManager(logic, startupWarnings);
     }
 
     /**
@@ -89,6 +96,12 @@ public class MainApp extends Application {
         } catch (DataLoadingException e) {
             logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
                     + " Will be starting with an empty AddressBook.");
+            fatalLoadError = "FATAL: The save file at " + storage.getAddressBookFilePath()
+                    + " could not be read — it may contain invalid JSON (e.g. a number with a leading zero"
+                    + " like '02' instead of '2').\n"
+                    + "Your data has NOT been changed and the file will NOT be overwritten.\n"
+                    + "Any changes you make in the app during this session will NOT be saved.\n"
+                    + "Please fix the file manually and restart the app.";
             initialData = new AddressBook();
         }
 

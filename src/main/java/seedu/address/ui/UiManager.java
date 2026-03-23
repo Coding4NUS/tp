@@ -22,12 +22,12 @@ public class UiManager implements Ui {
 
     private static final Logger logger = LogsCenter.getLogger(UiManager.class);
     private static final String ICON_APPLICATION = "/images/address_book_32.png";
-    private static final String SAVE_FILE_MESSAGE = "\nYou can fix these entries directly in the save file: ";
     private static final String INVALID_CONTACT_PREFIX = "Skipped invalid contact";
     private static final String DUPLICATE_CONTACT_PREFIX = "Skipped duplicate contact";
     private static final String INVALID_CLASS_SPACE_PREFIX = "Skipped invalid class space";
     private static final String DUPLICATE_CLASS_SPACE_PREFIX = "Skipped duplicate class space";
     private static final String LINE_SEPARATOR = "\n";
+    private static final String FATAL_PREFIX = "FATAL:";
 
     private Logic logic;
     private MainWindow mainWindow;
@@ -78,11 +78,25 @@ public class UiManager implements Ui {
     String buildStartUpMessage(List<String> warnings) {
         StringBuilder message = new StringBuilder(buildLoadedContactsMessage());
 
+        appendFatalErrorSection(message, warnings);
         appendContactWarningSection(message, warnings);
         appendClassSpaceWarningSection(message, warnings);
 
         return message.toString();
     }
+
+    private void appendFatalErrorSection(StringBuilder message, List<String> warnings) {
+        List<String> fatalWarnings = warnings.stream()
+                .filter(w -> w.startsWith(FATAL_PREFIX))
+                .toList();
+        if (fatalWarnings.isEmpty()) {
+            return;
+        }
+        appendSectionSpacing(message);
+        // Strip the prefix for display
+        message.append(fatalWarnings.get(0).substring(FATAL_PREFIX.length()).trim());
+    }
+
 
     private String buildLoadedContactsMessage() {
         int loadedContacts = logic.getAddressBook().getPersonList().size();
@@ -237,22 +251,6 @@ public class UiManager implements Ui {
     private void appendSectionSpacing(StringBuilder message) {
         message.append(LINE_SEPARATOR).append(LINE_SEPARATOR);
     }
-
-    private List<String> filterWarningsByPrefixes(List<String> warnings, String... prefixes) {
-        return warnings.stream()
-                .filter(warning -> startsWithAnyPrefix(warning, prefixes))
-                .toList();
-    }
-
-    private boolean startsWithAnyPrefix(String warning, String... prefixes) {
-        for (String prefix : prefixes) {
-            if (warning.startsWith(prefix)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     private Image getImage(String imagePath) {
         return new Image(MainApp.class.getResourceAsStream(imagePath));

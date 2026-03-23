@@ -26,6 +26,42 @@ import seedu.address.testutil.PersonBuilder;
 
 public class UiManagerTest {
 
+    @Test
+    public void buildStartUpMessage_fatalLoadError_displaysErrorMessage() {
+        Logic logicStub = new LogicStub(0);
+        UiManager uiManager = new UiManager(logicStub, List.of());
+
+        List<String> warnings = List.of(
+                "FATAL: The save file could not be read — it may contain invalid JSON.\n"
+                        + "Your data has NOT been changed and the file will NOT be overwritten.\n"
+                        + "Any changes you make in the app during this session will NOT be saved.\n"
+                        + "Please fix the file manually and restart the app."
+        );
+
+        String result = uiManager.buildStartUpMessage(warnings);
+
+        assertTrue(result.contains("The save file could not be read"));
+        assertTrue(result.contains("will NOT be saved"));
+        assertTrue(result.contains("Please fix the file manually"));
+    }
+
+    @Test
+    public void buildStartUpMessage_fatalLoadError_appearsBeforeContactWarnings() {
+        Logic logicStub = new LogicStub(0);
+        UiManager uiManager = new UiManager(logicStub, List.of());
+
+        List<String> warnings = List.of(
+                "FATAL: The save file could not be read.",
+                "Skipped invalid contact 'Alice':\n- invalid email"
+        );
+
+        String result = uiManager.buildStartUpMessage(warnings);
+
+        // Fatal error should appear before contact warnings
+        assertTrue(result.indexOf("save file could not be read")
+                < result.indexOf("Skipped invalid contact"));
+    }
+
 
     @Test
     public void buildStartUpMessage_noWarnings_returnsSuccessMessage() {

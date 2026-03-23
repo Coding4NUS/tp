@@ -250,4 +250,16 @@ public class JsonAddressBookStorageTest {
         String fileContent = java.nio.file.Files.readString(filePath);
         assertEquals("not valid json", fileContent);
     }
+
+    @Test
+    public void readAddressBook_brokenFile_lastLoadWarningsIsEmpty() throws Exception {
+        Path filePath = addToTestDataPathIfNotNull("notJsonFormatAddressBook.json");
+        JsonAddressBookStorage storage = new JsonAddressBookStorage(filePath);
+
+        assertThrows(DataLoadingException.class, () -> storage.readAddressBook(filePath));
+
+        // Fatal error message is assembled in MainApp, not storage
+        // so storage warnings should be empty after a fatal load failure
+        assertEquals(0, storage.getLastLoadWarnings().size());
+    }
 }
