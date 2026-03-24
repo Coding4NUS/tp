@@ -50,6 +50,12 @@ public interface Logic {
     /** Returns the attendance view mode property. */
     ReadOnlyBooleanProperty attendanceViewActiveProperty();
 
+    /** Returns the visible session range start property. */
+    ReadOnlyObjectProperty<LocalDate> visibleSessionRangeStartProperty();
+
+    /** Returns the visible session range end property. */
+    ReadOnlyObjectProperty<LocalDate> visibleSessionRangeEndProperty();
+
     /**
      * Returns the user prefs' address book file path.
      */

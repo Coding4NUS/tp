@@ -18,20 +18,24 @@ class JsonAdaptedSession {
     private final String date;
     private final String attendance;
     private final Integer participation;
+    private final String note;
 
     @JsonCreator
     public JsonAdaptedSession(@JsonProperty("date") String date,
                               @JsonProperty("attendance") String attendance,
-                              @JsonProperty("participation") Integer participation) {
+                              @JsonProperty("participation") Integer participation,
+                              @JsonProperty("note") String note) {
         this.date = date;
         this.attendance = attendance;
         this.participation = participation;
+        this.note = note;
     }
 
     public JsonAdaptedSession(Session source) {
         date = source.getDate().toString();
         attendance = source.getAttendance().toString();
         participation = source.getParticipation().value;
+        note = source.getNote();
     }
 
     public Session toModelType() throws IllegalValueException {
@@ -53,7 +57,8 @@ class JsonAdaptedSession {
         }
 
         try {
-            return new Session(date, new Attendance(attendance), new Participation(participation));
+            return new Session(date, new Attendance(attendance), new Participation(participation),
+                    note == null ? "" : note);
         } catch (IllegalArgumentException e) {
             throw new IllegalValueException(e.getMessage());
         }

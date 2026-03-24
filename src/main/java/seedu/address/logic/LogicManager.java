@@ -97,6 +97,16 @@ public class LogicManager implements Logic {
     }
 
     @Override
+    public ReadOnlyObjectProperty<LocalDate> visibleSessionRangeStartProperty() {
+        return model.visibleSessionRangeStartProperty();
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<LocalDate> visibleSessionRangeEndProperty() {
+        return model.visibleSessionRangeEndProperty();
+    }
+
+    @Override
     public Path getAddressBookFilePath() {
         return model.getAddressBookFilePath();
     }

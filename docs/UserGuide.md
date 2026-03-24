@@ -266,13 +266,13 @@ Format: `unmark i/INDEX d/YYYY-MM-DD`
 Examples:
 *  `unmark i/1 d/2026-03-16` Mark the attendance of the person in index 1 of the list in current view as ABSENT for the 16 of March 2026.
 
-### Enter attendance view : `attview`
+### View attendance and participation : `view`
 
-Shows the list of students with that attendance status for the tutorial group in current view on that date.
+Shows the attendance and participation overview for the tutorial group in the current view.
 
-Format: `attview STATUS d/YYYY-MM-DD`
+Format: `view [STATUS] [d/YYYY-MM-DD] [g/GROUP_NAME] [from/YYYY-MM-DD] [to/YYYY-MM-DD]`
 
-After entering attendance view for a session, you can use shorthand follow-up commands without repeating the date/group:
+After entering `view` for a session, you can use shorthand follow-up commands without repeating the date/group:
 * mark i/1
 * unmark i/1
 * part i/1 pv/4
@@ -285,9 +285,95 @@ You can still use the full forms if needed:
 **Tip:** Not including STATUS as a parameter shows:
 * attendance status as [ ] Absent, [X] Present, [-] Uninitialised
 * class participation score
+* a per-student summary column with attendance totals and average participation
+
+You can optionally narrow the visible session columns with a date range:
+* `from/` sets the earliest visible session date
+* `to/` sets the latest visible session date
+* both can be used together
+* `from/` cannot be later than `to/`
 
 Examples:
-*  `attview absent d/2026-03-16` Show the list of students who have the attendance status ABSENT on 3 March 2026 for the group in current view.
+*  `view` Show the semester overview of attendance and participation for the current group.
+*  `view d/2026-03-16` Highlight the session on 16 March 2026.
+*  `view absent d/2026-03-16` Show the list of students who have the attendance status ABSENT on 16 March 2026 for the group in current view.
+*  `view from/2026-03-01 to/2026-03-31` Show only March 2026 session columns in the overview.
+
+### Add a session : `addsession`
+
+Adds a session for the current group or a specified group.
+
+Format: `addsession d/YYYY-MM-DD [g/GROUP_NAME] [n/NOTE]`
+
+* Creates that date's session across all students in the class space.
+* New sessions start with `UNINITIALISED` attendance and participation value `0`.
+* You can optionally attach a short note such as `tutorial`, `lab`, or `make-up`.
+* If the session already exists for every student in that class, the command will fail.
+
+Examples:
+* `addsession d/2026-03-16`
+* `addsession d/2026-03-16 n/tutorial`
+* `addsession d/2026-03-16 g/T01`
+
+### Edit a session date : `editsession`
+
+Edits an existing session's date, note, or both for the current group or a specified group.
+
+Format: `editsession d/OLD_DATE [nd/NEW_DATE] [nn/NEW_NOTE] [g/GROUP_NAME]`
+
+* At least one of `nd/` or `nn/` must be provided.
+* Preserves the attendance and participation values while moving or relabelling the session.
+* If a session already exists on the new date for the same student, the command will fail to avoid overwriting data.
+* Use `nn/` with no text after it to clear the existing note.
+
+Examples:
+* `editsession d/2026-03-16 nd/2026-03-23`
+* `editsession d/2026-03-16 nn/lab`
+* `editsession d/2026-03-16 nd/2026-03-23 nn/make-up tutorial`
+* `editsession d/2026-03-16 nd/2026-03-23 g/T01`
+
+### Delete a session : `deletesession`
+
+Deletes an accidentally created session for the current group or a specified group.
+
+Format: `deletesession [confirm] d/YYYY-MM-DD [g/GROUP_NAME]`
+
+* Removes that date's attendance/participation session across all students in the class space.
+* If `g/GROUP_NAME` is omitted, the session is deleted from the current class space view.
+* If the deleted date is currently highlighted in `view`, the highlight is cleared.
+* The command asks for confirmation first. Re-run the same command with `confirm` in front to proceed.
+
+Examples:
+* `deletesession d/2026-03-16`
+* `deletesession confirm d/2026-03-16`
+* `deletesession d/2026-03-16 g/T01`
+
+### Export the current view : `exportview`
+
+Exports the currently displayed `view` matrix to a CSV file.
+
+Format: `exportview [f/FILE_PATH]`
+
+* Works when you are in a class space view.
+* Exports the currently displayed rows and the session columns currently visible in `view`.
+* If no file path is provided, the app writes to `view-export.csv`.
+
+Examples:
+* `exportview`
+* `exportview f/exports/t01-view.csv`
+
+### Undo the last session change : `undosession`
+
+Reverts the most recent session-related change.
+
+Format: `undosession`
+
+* Works for recent session changes such as `addsession`, `editsession`, confirmed `deletesession`, `mark`, `unmark`, and `part`.
+* Restores the previous session data, current class view, active highlighted date, and visible date range.
+* Only the latest session-related change can be undone.
+
+Examples:
+* `undosession`
 
 ### Create assignment : `createassignment`
 
@@ -394,13 +480,18 @@ Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 **Add to Group**   | `addtogroup g/GROUP_NAME m/MATRIC_NUMBER [m/MATRIC_NUMBER]` `addtogroup g/GROUP_NAME i/INDEX_EXPRESSION [i/INDEX_EXPRESSION]` <br> e.g., `addtogroup g/T01 m/A1234567X m/A2345678L`
-**Attendance View**   | `attview STATUS d/YYYY-MM-DD` <br> e.g., `attview absent d/2026-03-16`
+**Add Session**   | `addsession d/YYYY-MM-DD [g/GROUP_NAME] [n/NOTE]` <br> e.g., `addsession d/2026-03-16 g/T01 n/tutorial`
+**Edit Session**   | `editsession d/OLD_DATE [nd/NEW_DATE] [nn/NEW_NOTE] [g/GROUP_NAME]` <br> e.g., `editsession d/2026-03-16 nd/2026-03-23 nn/lab g/T01`
+**View Attendance/Participation**   | `view [STATUS] [d/YYYY-MM-DD] [g/GROUP_NAME] [from/YYYY-MM-DD] [to/YYYY-MM-DD]` <br> e.g., `view absent from/2026-03-01 to/2026-03-31`
+**Export View**   | `exportview [f/FILE_PATH]` <br> e.g., `exportview f/exports/t01-view.csv`
+**Undo Session Change**   | `undosession`
 **Clear**  | `clear`
 **Create Assignment**   | `createassignment a/ASSIGNMENT_NAME d/DUE_DATE mm/MAX_MARKS` `createa a/ASSIGNMENT_NAME d/DUE_DATE mm/MAX_MARKS` <br> e.g., `createassignment a/Quiz 1 d/2026-04-05 mm/20`
 **Create Group**   | `creategroup g/GROUP_NAME` <br> e.g., `creategroup g/T01`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Delete Assignment**   | `deleteassignment a/ASSIGNMENT_NAME` `deletea a/ASSIGNMENT_NAME` <br> e.g., `deleteassignment a/Quiz 1`
 **Delete Group**   | `deletegroup g/GROUP_NAME` <br> e.g., `deletegroup g/T01`
+**Delete Session**   | `deletesession [confirm] d/YYYY-MM-DD [g/GROUP_NAME]` <br> e.g., `deletesession confirm d/2026-03-16 g/T01`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Edit Assignment**   | `editassignment a/ASSIGNMENT_NAME na/NEW_ASSIGNMENT_NAME d/NEW_DUE_DATE mm/NEW_MAX_MARKS` `edita a/ASSIGNMENT_NAME na/NEW_ASSIGNMENT_NAME d/NEW_DUE_DATE mm/NEW_MAX_MARKS` <br> e.g., `editassignment a/Quiz 1 na/Test d/2026-04-08 mm/25`
 **Exit**   | `exit`

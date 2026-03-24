@@ -38,8 +38,10 @@ public class UnmarkCommand extends Command {
 
     public static final String MESSAGE_NO_ACTIVE_CLASS_SPACE =
             "No class space selected. Enter a class space first or provide g/CLASSSPACE.";
+    public static final String MESSAGE_REQUIRES_GROUP_VIEW =
+            "Mark attendance from a class space view only. Use switchgroup g/GROUP_NAME first.";
     public static final String MESSAGE_NO_ACTIVE_SESSION =
-            "No session selected. Provide d/YYYY-MM-DD or run attview with d/YYYY-MM-DD first.";
+            "No session selected. Provide d/YYYY-MM-DD or run view with d/YYYY-MM-DD first.";
 
     private final Index targetIndex;
     private final Optional<LocalDate> date;
@@ -64,6 +66,10 @@ public class UnmarkCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
+        if (model.getActiveClassSpaceName().isEmpty()) {
+            throw new CommandException(MESSAGE_REQUIRES_GROUP_VIEW);
+        }
+
         if (classSpaceName.isPresent()) {
             ClassSpaceName targetName = classSpaceName.get();
 
@@ -86,6 +92,7 @@ public class UnmarkCommand extends Command {
             throw new CommandException(MESSAGE_NO_ACTIVE_SESSION);
         }
         LocalDate targetDate = resolvedDate.get();
+        SessionCommandHistory.record(model, COMMAND_WORD + " i/" + targetIndex.getOneBased() + " d/" + targetDate);
 
         List<Person> lastShownList = model.getFilteredPersonList();
 
@@ -100,7 +107,8 @@ public class UnmarkCommand extends Command {
         Session updatedSession = new Session(
                 targetDate,
                 new Attendance(Attendance.Status.ABSENT),
-                currentSession.getParticipation()
+                currentSession.getParticipation(),
+                currentSession.getNote()
         );
 
         Person updatedPerson = personToUpdate.withUpdatedSession(classSpace, updatedSession);

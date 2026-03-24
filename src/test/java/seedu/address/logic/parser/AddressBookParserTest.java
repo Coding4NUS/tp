@@ -15,17 +15,22 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddSessionCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.CreateAssignmentCommand;
 import seedu.address.logic.commands.DeleteAssignmentCommand;
 import seedu.address.logic.commands.DeleteCommand;
+import seedu.address.logic.commands.DeleteSessionCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditSessionCommand;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.ExportViewCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.GradeAssignmentCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.ViewCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
@@ -42,6 +47,12 @@ public class AddressBookParserTest {
         Person person = new PersonBuilder().build();
         AddCommand command = (AddCommand) parser.parseCommand(PersonUtil.getAddCommand(person));
         assertEquals(new AddCommand(person), command);
+    }
+
+    @Test
+    public void parseCommand_addSession() throws Exception {
+        assertTrue(parser.parseCommand(AddSessionCommand.COMMAND_WORD
+                + " d/2026-03-16") instanceof AddSessionCommand);
     }
 
     @Test
@@ -98,6 +109,29 @@ public class AddressBookParserTest {
     public void parseCommand_deleteAssignmentAlias() throws Exception {
         assertTrue(parser.parseCommand(DeleteAssignmentCommand.SHORT_COMMAND_WORD
                 + " a/Quiz 1") instanceof DeleteAssignmentCommand);
+    }
+
+    @Test
+    public void parseCommand_deleteSession() throws Exception {
+        assertTrue(parser.parseCommand(DeleteSessionCommand.COMMAND_WORD
+                + " d/2026-03-16") instanceof DeleteSessionCommand);
+    }
+
+    @Test
+    public void parseCommand_editSession() throws Exception {
+        assertTrue(parser.parseCommand(EditSessionCommand.COMMAND_WORD
+                + " d/2026-03-16 nd/2026-03-23") instanceof EditSessionCommand);
+    }
+
+    @Test
+    public void parseCommand_exportView() throws Exception {
+        assertTrue(parser.parseCommand(ExportViewCommand.COMMAND_WORD
+                + " f/view.csv") instanceof ExportViewCommand);
+    }
+
+    @Test
+    public void parseCommand_view() throws Exception {
+        assertTrue(parser.parseCommand(ViewCommand.COMMAND_WORD + " d/2026-03-16") instanceof ViewCommand);
     }
 
     @Test

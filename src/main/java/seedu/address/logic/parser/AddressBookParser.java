@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddSessionCommand;
 import seedu.address.logic.commands.AddToGroupCommand;
-import seedu.address.logic.commands.AttViewCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CreateAssignmentCommand;
@@ -18,9 +18,12 @@ import seedu.address.logic.commands.CreateGroupCommand;
 import seedu.address.logic.commands.DeleteAssignmentCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.DeleteGroupCommand;
+import seedu.address.logic.commands.DeleteSessionCommand;
 import seedu.address.logic.commands.EditAssignmentCommand;
 import seedu.address.logic.commands.EditCommand;
+import seedu.address.logic.commands.EditSessionCommand;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.ExportViewCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.GradeAssignmentCommand;
 import seedu.address.logic.commands.HelpCommand;
@@ -32,7 +35,9 @@ import seedu.address.logic.commands.PartCommand;
 import seedu.address.logic.commands.RemoveFromGroupCommand;
 import seedu.address.logic.commands.RenameGroupCommand;
 import seedu.address.logic.commands.SwitchGroupCommand;
+import seedu.address.logic.commands.UndoSessionCommand;
 import seedu.address.logic.commands.UnmarkCommand;
+import seedu.address.logic.commands.ViewCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
@@ -69,11 +74,17 @@ public class AddressBookParser {
         case AddCommand.COMMAND_WORD:
             return new AddCommandParser().parse(arguments);
 
-        case AttViewCommand.COMMAND_WORD:
-            return new AttViewCommandParser().parse(arguments);
+        case AddSessionCommand.COMMAND_WORD:
+            return new AddSessionCommandParser().parse(arguments);
+
+        case ViewCommand.COMMAND_WORD:
+            return new ViewCommandParser().parse(arguments);
 
         case EditCommand.COMMAND_WORD:
             return new EditCommandParser().parse(arguments);
+
+        case EditSessionCommand.COMMAND_WORD:
+            return new EditSessionCommandParser().parse(arguments);
 
         case DeleteCommand.COMMAND_WORD:
             return new DeleteCommandParser().parse(arguments);
@@ -113,6 +124,12 @@ public class AddressBookParser {
         case DeleteGroupCommand.COMMAND_WORD:
             return new DeleteGroupCommandParser().parse(arguments);
 
+        case DeleteSessionCommand.COMMAND_WORD:
+            return new DeleteSessionCommandParser().parse(arguments);
+
+        case ExportViewCommand.COMMAND_WORD:
+            return new ExportViewCommandParser().parse(arguments);
+
         case ListGroupsCommand.COMMAND_WORD:
             if (!arguments.trim().isEmpty()) {
                 throw new ParseException(
@@ -140,6 +157,9 @@ public class AddressBookParser {
 
         case UnmarkCommand.COMMAND_WORD:
             return new UnmarkCommandParser().parse(arguments);
+
+        case UndoSessionCommand.COMMAND_WORD:
+            return new UndoSessionCommand();
 
         case ExitCommand.COMMAND_WORD:
             return new ExitCommand();

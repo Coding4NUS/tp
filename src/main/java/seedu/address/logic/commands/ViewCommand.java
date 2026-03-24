@@ -18,25 +18,28 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.Session;
 
 /**
- * Filters the current view to persons with the specified attendance status.
+ * Shows attendance and participation information for the current class space.
  */
-public class AttViewCommand extends Command {
+public class ViewCommand extends Command {
 
-    public static final String COMMAND_WORD = "attview";
+    public static final String COMMAND_WORD = "view";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Shows attendance view for a specific session in the current or specified tutorial group.\n"
-            + "Parameters: [STATUS] [d/YYYY-MM-DD] [g/GROUP_NAME]\n"
+            + ": Shows attendance and participation view for a specific session or the whole class overview.\n"
+            + "Parameters: [STATUS] [d/YYYY-MM-DD] [g/GROUP_NAME] [from/YYYY-MM-DD] [to/YYYY-MM-DD]\n"
             + "Allowed values: PRESENT, ABSENT, UNINITIALISED\n"
             + "Examples: " + COMMAND_WORD + "\n"
             + "          " + COMMAND_WORD + " PRESENT d/2026-03-16\n"
             + "          " + COMMAND_WORD + " d/2026-03-16 g/T01\n"
-            + "          " + COMMAND_WORD + " ABSENT d/2026-03-16 g/T01";
+            + "          " + COMMAND_WORD + " ABSENT d/2026-03-16 g/T01\n"
+            + "          " + COMMAND_WORD + " from/2026-03-01 to/2026-03-31";
 
     public static final String MESSAGE_SUCCESS =
             "Listed %1$d students with attendance %2$s in class space %3$s for session %4$s";
     public static final String MESSAGE_VIEW_SUCCESS =
             "Showing attendance and participation for %1$d students in class space %2$s for session %3$s";
+    public static final String MESSAGE_OVERVIEW_SUCCESS =
+            "Showing attendance and participation overview for %1$d students in class space %2$s";
     public static final String MESSAGE_NO_MATCHES =
             "No students with attendance %1$s were found in class space %2$s for session %3$s";
     public static final String MESSAGE_GROUP_NOT_FOUND =
@@ -49,80 +52,81 @@ public class AttViewCommand extends Command {
     private final Optional<Attendance> attendance;
     private final Optional<ClassSpaceName> classSpaceName;
     private final Optional<LocalDate> sessionDate;
+    private final Optional<LocalDate> rangeStartDate;
+    private final Optional<LocalDate> rangeEndDate;
 
-    /**
-     * Creates an attendance view command for the current view without filtering by attendance status.
-     */
-    public AttViewCommand() {
-        this(Optional.empty(), Optional.empty(), Optional.empty());
+    public ViewCommand() {
+        this(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+    }
+
+    public ViewCommand(Attendance attendance) {
+        this(Optional.of(attendance), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     /**
-     * Creates an attendance view command filtered by the specified attendance status.
-     *
-     * @param attendance Attendance status to filter by.
+     * Creates a view command filtered by attendance for a specific session date.
      */
-    public AttViewCommand(Attendance attendance) {
-        this(Optional.of(attendance), Optional.empty(), Optional.empty());
+    public ViewCommand(Attendance attendance, LocalDate sessionDate) {
+        this(Optional.of(attendance), Optional.empty(), Optional.of(sessionDate),
+                Optional.empty(), Optional.empty());
     }
 
     /**
-     * Creates an attendance view command filtered by attendance status for the specified session date.
+     * Creates a view command filtered by attendance and class space.
      */
-    public AttViewCommand(Attendance attendance, LocalDate sessionDate) {
-        this(Optional.of(attendance), Optional.empty(), Optional.of(sessionDate));
+    public ViewCommand(Attendance attendance, ClassSpaceName classSpaceName) {
+        this(Optional.of(attendance), Optional.of(classSpaceName), Optional.empty(),
+                Optional.empty(), Optional.empty());
     }
 
     /**
-     * Creates an attendance view command filtered by attendance status within the specified class space.
-     *
-     * @param attendance Attendance status to filter by.
-     * @param classSpaceName Name of the class space to switch to before filtering.
+     * Creates a view command filtered by attendance, class space, and session date.
      */
-    public AttViewCommand(Attendance attendance, ClassSpaceName classSpaceName) {
-        this(Optional.of(attendance), Optional.of(classSpaceName), Optional.empty());
+    public ViewCommand(Attendance attendance, ClassSpaceName classSpaceName, LocalDate sessionDate) {
+        this(Optional.of(attendance), Optional.of(classSpaceName), Optional.of(sessionDate),
+                Optional.empty(), Optional.empty());
     }
 
     /**
-     * Creates an attendance view command filtered by attendance status within the specified class space
-     * and session date.
+     * Creates a view command scoped to a class space.
      */
-    public AttViewCommand(Attendance attendance, ClassSpaceName classSpaceName, LocalDate sessionDate) {
-        this(Optional.of(attendance), Optional.of(classSpaceName), Optional.of(sessionDate));
+    public ViewCommand(ClassSpaceName classSpaceName) {
+        this(Optional.empty(), Optional.of(classSpaceName), Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     /**
-     * Creates an attendance view command for the specified class space without attendance filtering.
-     *
-     * @param classSpaceName Name of the class space to switch to.
+     * Creates a view command scoped to a class space and highlighted session date.
      */
-    public AttViewCommand(ClassSpaceName classSpaceName) {
-        this(Optional.empty(), Optional.of(classSpaceName), Optional.empty());
+    public ViewCommand(ClassSpaceName classSpaceName, LocalDate sessionDate) {
+        this(Optional.empty(), Optional.of(classSpaceName), Optional.of(sessionDate),
+                Optional.empty(), Optional.empty());
     }
 
     /**
-     * Creates an attendance view command for the specified class space and session date.
+     * Creates a view command highlighted on a specific session date.
      */
-    public AttViewCommand(ClassSpaceName classSpaceName, LocalDate sessionDate) {
-        this(Optional.empty(), Optional.of(classSpaceName), Optional.of(sessionDate));
+    public ViewCommand(LocalDate sessionDate) {
+        this(Optional.empty(), Optional.empty(), Optional.of(sessionDate), Optional.empty(), Optional.empty());
     }
 
     /**
-     * Creates an attendance view command for the specified session date.
+     * Creates a view command with optional attendance, class space, session date, and visible date range filters.
      */
-    public AttViewCommand(LocalDate sessionDate) {
-        this(Optional.empty(), Optional.empty(), Optional.of(sessionDate));
-    }
-
-    private AttViewCommand(Optional<Attendance> attendance,
-                           Optional<ClassSpaceName> classSpaceName,
-                           Optional<LocalDate> sessionDate) {
+    public ViewCommand(Optional<Attendance> attendance,
+                       Optional<ClassSpaceName> classSpaceName,
+                       Optional<LocalDate> sessionDate,
+                       Optional<LocalDate> rangeStartDate,
+                       Optional<LocalDate> rangeEndDate) {
         requireNonNull(attendance);
         requireNonNull(classSpaceName);
         requireNonNull(sessionDate);
+        requireNonNull(rangeStartDate);
+        requireNonNull(rangeEndDate);
         this.attendance = attendance;
         this.classSpaceName = classSpaceName;
         this.sessionDate = sessionDate;
+        this.rangeStartDate = rangeStartDate;
+        this.rangeEndDate = rangeEndDate;
     }
 
     @Override
@@ -141,21 +145,35 @@ public class AttViewCommand extends Command {
         Optional<LocalDate> resolvedSessionDate = sessionDate.isPresent()
                 ? sessionDate
                 : model.getActiveSessionDate();
-        if (resolvedSessionDate.isEmpty()) {
-            throw new CommandException(MESSAGE_NO_ACTIVE_SESSION);
-        }
-        LocalDate targetSessionDate = resolvedSessionDate.get();
-
-        model.setActiveSessionDate(targetSessionDate);
         model.setAttendanceViewActive(true);
-        initializeMissingSessionsForCurrentView(model, targetClassSpace, targetSessionDate);
+        if (rangeStartDate.isPresent() || rangeEndDate.isPresent()) {
+            model.setVisibleSessionRange(rangeStartDate.orElse(null), rangeEndDate.orElse(null));
+        } else {
+            model.clearVisibleSessionRange();
+        }
+
+        if (resolvedSessionDate.isPresent()) {
+            LocalDate targetSessionDate = resolvedSessionDate.get();
+            model.setActiveSessionDate(targetSessionDate);
+            initializeMissingSessionsForCurrentView(model, targetClassSpace, targetSessionDate);
+        }
 
         if (attendance.isEmpty()) {
             model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+            if (resolvedSessionDate.isPresent()) {
+                return new CommandResult(String.format(
+                        MESSAGE_VIEW_SUCCESS, model.getFilteredPersonList().size(),
+                        targetClassSpace, resolvedSessionDate.get()));
+            }
             return new CommandResult(String.format(
-                    MESSAGE_VIEW_SUCCESS, model.getFilteredPersonList().size(), targetClassSpace, targetSessionDate));
+                    MESSAGE_OVERVIEW_SUCCESS, model.getFilteredPersonList().size(), targetClassSpace));
         }
 
+        if (resolvedSessionDate.isEmpty()) {
+            throw new CommandException(MESSAGE_NO_ACTIVE_SESSION);
+        }
+
+        LocalDate targetSessionDate = resolvedSessionDate.get();
         Attendance targetAttendance = attendance.get();
         model.updateFilteredPersonList(person -> person.getAttendance(targetClassSpace, targetSessionDate)
                 .equals(targetAttendance));
@@ -177,7 +195,7 @@ public class AttViewCommand extends Command {
                     .isPresent();
             if (!sessionExists) {
                 Session defaultSession = new Session(date, new Attendance(Attendance.Status.UNINITIALISED),
-                        new Participation(0));
+                        new Participation(0), "");
                 Person updatedPerson = person.withUpdatedSession(classSpaceName, defaultSession);
                 model.setPerson(person, updatedPerson);
             }
@@ -190,13 +208,15 @@ public class AttViewCommand extends Command {
             return true;
         }
 
-        if (!(other instanceof AttViewCommand otherAttViewCommand)) {
+        if (!(other instanceof ViewCommand otherViewCommand)) {
             return false;
         }
 
-        return attendance.equals(otherAttViewCommand.attendance)
-                && classSpaceName.equals(otherAttViewCommand.classSpaceName)
-                && sessionDate.equals(otherAttViewCommand.sessionDate);
+        return attendance.equals(otherViewCommand.attendance)
+                && classSpaceName.equals(otherViewCommand.classSpaceName)
+                && sessionDate.equals(otherViewCommand.sessionDate)
+                && rangeStartDate.equals(otherViewCommand.rangeStartDate)
+                && rangeEndDate.equals(otherViewCommand.rangeEndDate);
     }
 
     @Override
@@ -205,6 +225,8 @@ public class AttViewCommand extends Command {
                 .add("attendance", attendance)
                 .add("classSpaceName", classSpaceName)
                 .add("sessionDate", sessionDate)
+                .add("rangeStartDate", rangeStartDate)
+                .add("rangeEndDate", rangeEndDate)
                 .toString();
     }
 }
