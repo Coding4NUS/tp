@@ -178,10 +178,11 @@ public class PersonListPanel extends UiPart<Region> {
         attendanceMatrixScrollHint.setManaged(sessionDates.size() > 4);
 
         if (sessionDates.isEmpty()) {
-            attendanceMatrixGrid.setManaged(false);
-            attendanceMatrixGrid.setVisible(false);
+            attendanceMatrixGrid.setManaged(true);
+            attendanceMatrixGrid.setVisible(true);
             attendanceMatrixEmptyState.setManaged(true);
             attendanceMatrixEmptyState.setVisible(true);
+            addEmptyStateStudentRows(personList);
             return;
         }
 
@@ -305,15 +306,7 @@ public class PersonListPanel extends UiPart<Region> {
             Person person = personList.get(rowIndex);
             String rowStyleClass = rowIndex % 2 == 0 ? "attendance-matrix-row-even" : "attendance-matrix-row-odd";
 
-            Label studentLabel = new Label(person.getName().fullName);
-            studentLabel.getStyleClass().addAll("attendance-matrix-student", rowStyleClass);
-            studentLabel.setWrapText(true);
-            studentLabel.setMinWidth(STUDENT_COLUMN_WIDTH);
-            studentLabel.setPrefWidth(STUDENT_COLUMN_WIDTH);
-            studentLabel.setMaxWidth(STUDENT_COLUMN_WIDTH);
-            studentLabel.setMinHeight(MATRIX_CELL_HEIGHT);
-            studentLabel.setPrefHeight(MATRIX_CELL_HEIGHT);
-            studentLabel.setMaxHeight(MATRIX_CELL_HEIGHT);
+            Label studentLabel = createStudentLabel(person, rowIndex, rowStyleClass);
             attendanceMatrixGrid.add(studentLabel, 0, rowIndex + 1);
 
             for (int columnIndex = 0; columnIndex < sessionDates.size(); columnIndex++) {
@@ -323,6 +316,28 @@ public class PersonListPanel extends UiPart<Region> {
                 attendanceMatrixGrid.add(cell, columnIndex + 1, rowIndex + 1);
             }
         }
+    }
+
+    private void addEmptyStateStudentRows(ObservableList<Person> personList) {
+        attendanceMatrixGrid.add(createHeaderLabel("Student", true, null), 0, 0);
+        for (int rowIndex = 0; rowIndex < personList.size(); rowIndex++) {
+            Person person = personList.get(rowIndex);
+            String rowStyleClass = rowIndex % 2 == 0 ? "attendance-matrix-row-even" : "attendance-matrix-row-odd";
+            attendanceMatrixGrid.add(createStudentLabel(person, rowIndex, rowStyleClass), 0, rowIndex + 1);
+        }
+    }
+
+    private Label createStudentLabel(Person person, int rowIndex, String rowStyleClass) {
+        Label studentLabel = new Label((rowIndex + 1) + ". " + person.getName().fullName);
+        studentLabel.getStyleClass().addAll("attendance-matrix-student", rowStyleClass);
+        studentLabel.setWrapText(true);
+        studentLabel.setMinWidth(STUDENT_COLUMN_WIDTH);
+        studentLabel.setPrefWidth(STUDENT_COLUMN_WIDTH);
+        studentLabel.setMaxWidth(STUDENT_COLUMN_WIDTH);
+        studentLabel.setMinHeight(MATRIX_CELL_HEIGHT);
+        studentLabel.setPrefHeight(MATRIX_CELL_HEIGHT);
+        studentLabel.setMaxHeight(MATRIX_CELL_HEIGHT);
+        return studentLabel;
     }
 
     private Label createHeaderLabel(String text,
