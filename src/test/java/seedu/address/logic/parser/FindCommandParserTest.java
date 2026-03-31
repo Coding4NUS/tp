@@ -18,12 +18,14 @@ public class FindCommandParserTest {
 
     @Test
     public void parse_emptyArg_throwsParseException() {
+        // whitespace only
         assertParseFailure(parser, "     ",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void parse_noPrefixes_throwsParseException() {
+        // no prefixes
         assertParseFailure(parser, "Alice Bob",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
     }
@@ -38,6 +40,7 @@ public class FindCommandParserTest {
                         Collections.emptyList(),
                         Collections.emptyList()));
 
+        // multiple prefixes of same type
         assertParseSuccess(parser, " n/Alice n/Bob ", expectedFindCommand);
     }
 
@@ -51,6 +54,7 @@ public class FindCommandParserTest {
                         Collections.singletonList("A1234567X"),
                         Arrays.asList("friends", "T01")));
 
+        // multiple prefixes of different types
         assertParseSuccess(parser,
                 " n/Alex p/87438807 e/alexyeoh@example.com m/A1234567X t/friends t/T01 ",
                 expectedFindCommand);
