@@ -6,7 +6,7 @@ skinparam classBackgroundColor UI_COLOR
 
 package UI <<Rectangle>> {
 Class "<<interface>>\nUi" as Ui
-Class "{abstract}\nUiPart" as UiPart
+Class "      {abstract}      \nUiPart" as UiPart
 
 Class UiManager
 Class MainWindow
@@ -29,35 +29,34 @@ Class HiddenModel #FFFFFF
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Ui
 
-UiManager .left.|> Ui
-UiManager --> "1" MainWindow
-UiManager -> Logic
+UiManager ..up|> Ui
+UiManager --down> "1" MainWindow
+UiManager -right> Logic
+Model -left[hidden]> Logic
 
-MainWindow --|> UiPart
-HelpWindow --|> UiPart
-ResultDisplay --|> UiPart
-PersonListPanel --|> UiPart
+PersonListPanel -|> UiPart
+StatusBarFooter -|> UiPart
+ResultDisplay -|> UiPart
+CommandBox -|> UiPart
+HelpWindow -|> UiPart
+MainWindow --------|> UiPart
+
 PersonCard --|> UiPart
-StatusBarFooter --|> UiPart
-CommandBox --|> UiPart
 
-MainWindow -> Logic
+MainWindow --up> Logic
+MainWindow *-down> "1" StatusBarFooter
+MainWindow *-down> "1" ResultDisplay
+MainWindow *-down> "1" CommandBox
+MainWindow *-down> "1" HelpWindow
+MainWindow *-down> "1" PersonListPanel
 
+PersonListPanel --down> " *  " PersonCard
+PersonListPanel .down> Model
+PersonCard ..up> Model
 
-MainWindow *-down-> "1" StatusBarFooter
-MainWindow *-down-> "1" ResultDisplay
-MainWindow *-down-> "1" CommandBox
-MainWindow *-down-> "1" HelpWindow
-MainWindow *-down-> "1" PersonListPanel
-
-PersonListPanel --down> "    *" PersonCard
-
-PersonCard ..> Model
-PersonListPanel ..> Model
-
-PersonListPanel -[hidden]left- HelpWindow
-HelpWindow -[hidden]left- CommandBox
-CommandBox -[hidden]left- ResultDisplay
-ResultDisplay -[hidden]left- StatusBarFooter
+StatusBarFooter --[hidden]> PersonListPanel
+ResultDisplay --[hidden]> StatusBarFooter
+CommandBox --[hidden]> ResultDisplay
+HelpWindow --[hidden]> CommandBox
 
 @enduml
