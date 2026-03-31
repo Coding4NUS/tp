@@ -30,8 +30,8 @@ Class HiddenOutside #FFFFFF
 HiddenOutside ..> Ui
 
 UiManager ..up|> Ui
-UiManager --down> "1" MainWindow
 UiManager -right> Logic
+UiManager --down> "1" MainWindow
 Model -left[hidden]> Logic
 
 PersonListPanel -|> UiPart
@@ -39,7 +39,7 @@ StatusBarFooter -|> UiPart
 ResultDisplay -|> UiPart
 CommandBox -|> UiPart
 HelpWindow -|> UiPart
-MainWindow --------|> UiPart
+MainWindow ---------|> UiPart
 
 PersonCard --|> UiPart
 
@@ -51,7 +51,7 @@ MainWindow *-down> "1     " HelpWindow
 MainWindow *-down> "1  " PersonListPanel
 
 PersonListPanel --down> " *" PersonCard
-PersonListPanel .down> Model
+PersonListPanel ....> Model
 PersonCard ..up> Model
 
 StatusBarFooter --[hidden]> PersonListPanel
