@@ -57,12 +57,6 @@ class JsonSerializableAddressBook {
         if (preservedSkippedGroups != null) {
             this.preservedSkippedGroups.addAll(preservedSkippedGroups);
         }
-
-        /*
-         * loadWarnings is intentionally not restored from the file.
-         * Warnings are always regenerated fresh by toModelType() based on the current
-         * state of preserved entries, so stale warnings never persist across sessions
-         */
     }
 
     /**
@@ -90,12 +84,12 @@ class JsonSerializableAddressBook {
      * @param source Address book data to serialize.
      * @param preservedSkippedPersons Raw person JSON nodes that should be written back unchanged.
      * @param preservedSkippedGroups Raw group JSON nodes that should be written back unchanged.
-     * @param ignoredLoadWarnings Only for JSON compatibility and is intentionally ignored.
+     * @param loadWarnings Load warning issues to be added into JSON.
      */
     public JsonSerializableAddressBook(ReadOnlyAddressBook source,
                                        List<JsonNode> preservedSkippedPersons,
                                        List<JsonNode> preservedSkippedGroups,
-                                       List<String> ignoredLoadWarnings) {
+                                       List<String> loadWarnings) {
         persons.addAll(source.getPersonList().stream()
                 .map(JsonAdaptedPerson::new)
                 .map(JsonUtil::toJsonNode)
@@ -106,6 +100,9 @@ class JsonSerializableAddressBook {
                 .map(JsonUtil::toJsonNode)
                 .collect(Collectors.toList()));
         addDeepCopies(this.preservedSkippedGroups, preservedSkippedGroups);
+        if (loadWarnings != null) {
+            this.loadWarnings.addAll(loadWarnings);
+        }
     }
 
     /**
