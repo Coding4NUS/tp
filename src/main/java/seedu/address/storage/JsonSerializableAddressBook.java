@@ -57,9 +57,6 @@ class JsonSerializableAddressBook {
         if (preservedSkippedGroups != null) {
             this.preservedSkippedGroups.addAll(preservedSkippedGroups);
         }
-        if (loadWarnings != null) {
-            this.loadWarnings.addAll(loadWarnings);
-        }
     }
 
     /**
@@ -140,15 +137,24 @@ class JsonSerializableAddressBook {
      */
     public AddressBook toModelType() throws IllegalValueException {
         AddressBook addressBook = new AddressBook();
-        List<String> previousWarnings = new ArrayList<>(loadWarnings);
         loadWarnings.clear();
 
+        // previouslySkippedPersons and previouslySkippedPersons are like snapshots of preserved entries of previous
+        // load. Meant to prevent duplicate warnings by not validating fresh entries.
+        List<JsonNode> previouslySkippedPersons = new ArrayList<>(preservedSkippedPersons);
+        List<JsonNode> previouslySkippedGroups = new ArrayList<>(preservedSkippedGroups);
+        preservedSkippedPersons.clear();
+        preservedSkippedGroups.clear();
+
         logger.info("Loading address book: " + groups.size() + " group(s), "
-                + persons.size() + " person(s)");
+                + persons.size() + " person(s), "
+                + previouslySkippedGroups.size() + " preserved-skipped group(s), "
+                + previouslySkippedPersons.size() + " preserved-skipped person(s)");
 
         loadGroups(addressBook);
+        revalidatePreservedGroups(addressBook, previouslySkippedGroups);
         loadPersons(addressBook);
-        loadWarnings.addAll(0, previousWarnings); //insert at start of array
+        revalidatePreservedPersons(addressBook, previouslySkippedPersons);
 
         logger.info("Address book loaded: " + addressBook.getPersonList().size()
                 + " person(s) loaded, " + loadWarnings.size() + " skipped");
@@ -257,6 +263,73 @@ class JsonSerializableAddressBook {
         }
         for (JsonNode node : source) {
             target.add(node.deepCopy());
+        }
+    }
+
+    /**
+     * Re-attempts validation of all groups preserved from a previous session.
+     * Groups that now pass are moved to the address book and removed from the
+     * preserved list. Groups that still fail remain preserved with a fresh warning.
+     */
+    private void revalidatePreservedGroups(AddressBook addressBook, List<JsonNode> preservedSkippedGroupsList) {
+        requireNonNull(addressBook);
+        requireNonNull(preservedSkippedGroupsList);
+
+        for (int i = 0; i < preservedSkippedGroupsList.size(); i++) {
+            JsonNode rawGroupNode = preservedSkippedGroupsList.get(i);
+            String identifier = getRawEntryIdentifier(rawGroupNode, i);
+            try {
+                JsonAdaptedGroup jsonAdaptedGroup = JsonUtil.fromJsonNode(rawGroupNode, JsonAdaptedGroup.class);
+                Group group = jsonAdaptedGroup.toModelType();
+
+                if (addressBook.hasGroup(group)) {
+                    skipDuplicateGroup(rawGroupNode, group, i);
+                    continue;
+                }
+
+                logger.info("Preserved skipped group now valid, moving to valid group list: " + identifier);
+                addressBook.addGroup(group);
+
+            } catch (IllegalValueException | JsonProcessingException e) {
+                skipInvalidGroup(rawGroupNode, i, e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Re-attempts validation of all persons preserved from a previous session.
+     * Persons that now pass are moved to the address book and removed from the
+     * preserved list.
+     * Persons that still fail remain preserved with a fresh warning.
+     * Groups are revalidated first so a person whose group was also just moved
+     * can succeed in the same load cycle.
+     */
+    private void revalidatePreservedPersons(AddressBook addressBook, List<JsonNode> preservedSkippedPersonsList) {
+        requireNonNull(addressBook);
+        requireNonNull(preservedSkippedPersonsList);
+
+        for (int i = 0; i < preservedSkippedPersonsList.size(); i++) {
+            JsonNode rawPersonNode = preservedSkippedPersonsList.get(i);
+            String identifier = getRawEntryIdentifier(rawPersonNode, i);
+            try {
+                JsonAdaptedPerson jsonAdaptedPerson = JsonUtil.fromJsonNode(rawPersonNode, JsonAdaptedPerson.class);
+                Person person = jsonAdaptedPerson.toModelType();
+
+                if (addressBook.hasPerson(person)) {
+                    skipDuplicatePerson(rawPersonNode, person, i);
+                    continue;
+                }
+
+                PersonLoadValidator.validateGroupsExist(addressBook, person);
+                PersonLoadValidator.validateAssignmentGrades(addressBook, person);
+                PersonLoadValidator.validateGroupSessions(person);
+
+                logger.info("Preserved skipped contact now valid, moving to valid person list: " + identifier);
+                addressBook.addPerson(person);
+
+            } catch (IllegalValueException | JsonProcessingException e) {
+                skipInvalidPerson(rawPersonNode, i, e.getMessage());
+            }
         }
     }
 
