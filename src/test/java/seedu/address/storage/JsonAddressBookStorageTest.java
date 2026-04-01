@@ -286,4 +286,18 @@ public class JsonAddressBookStorageTest {
 
         assertFalse(result.isPresent(), "Blank file should return Optional.empty() to trigger sample data");
     }
+
+    @Test
+    public void readAddressBook_clearedAddressBook_returnsEmptyNotSampleData() throws Exception {
+        // After clear, the saved JSON has empty arrays — must load as empty, not sample data.
+        Path filePath = testFolder.resolve("clearedAddressBook.json");
+        JsonAddressBookStorage storage = new JsonAddressBookStorage(filePath);
+        storage.saveAddressBook(new AddressBook(), filePath);
+
+        java.util.Optional<ReadOnlyAddressBook> result = storage.readAddressBook(filePath);
+
+        assertTrue(result.isPresent(), "Cleared address book should return empty book, not Optional.empty()");
+        assertEquals(0, new AddressBook(result.get()).getPersonList().size());
+        assertEquals(0, new AddressBook(result.get()).getGroupList().size());
+    }
 }
