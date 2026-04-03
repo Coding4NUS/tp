@@ -94,7 +94,6 @@ public class UnmarkCommand extends Command {
             throw new CommandException(MESSAGE_NO_ACTIVE_SESSION);
         }
         LocalDate targetDate = resolvedDate.get();
-        SessionCommandHistory.record(model, COMMAND_WORD + " i/" + targetIndex.getOneBased() + " d/" + targetDate);
 
         List<Person> lastShownList = model.getFilteredPersonList();
 

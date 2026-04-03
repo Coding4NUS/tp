@@ -32,7 +32,6 @@ public class CommandRegistry {
             Map.entry(RemoveFromGroupCommand.COMMAND_WORD, RemoveFromGroupCommand.COMMAND_PARAMETERS),
             Map.entry(RenameGroupCommand.COMMAND_WORD, RenameGroupCommand.COMMAND_PARAMETERS),
             Map.entry(SwitchGroupCommand.COMMAND_WORD, SwitchGroupCommand.COMMAND_PARAMETERS),
-            Map.entry(UndoSessionCommand.COMMAND_WORD, UndoSessionCommand.COMMAND_PARAMETERS),
             Map.entry(UnmarkCommand.COMMAND_WORD, UnmarkCommand.COMMAND_PARAMETERS),
             Map.entry(ViewCommand.COMMAND_WORD, ViewCommand.COMMAND_PARAMETERS)
     );

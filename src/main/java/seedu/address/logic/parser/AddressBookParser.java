@@ -35,7 +35,6 @@ import seedu.address.logic.commands.PartCommand;
 import seedu.address.logic.commands.RemoveFromGroupCommand;
 import seedu.address.logic.commands.RenameGroupCommand;
 import seedu.address.logic.commands.SwitchGroupCommand;
-import seedu.address.logic.commands.UndoSessionCommand;
 import seedu.address.logic.commands.UnmarkCommand;
 import seedu.address.logic.commands.ViewCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -130,8 +129,6 @@ public class AddressBookParser {
             return new AddSessionCommandParser().parse(arguments);
         case EditSessionCommand.COMMAND_WORD:
             return new EditSessionCommandParser().parse(arguments);
-        case UndoSessionCommand.COMMAND_WORD:
-            return new UndoSessionCommand();
         case DeleteSessionCommand.COMMAND_WORD:
             return new DeleteSessionCommandParser().parse(arguments);
         case ExportViewCommand.COMMAND_WORD:

@@ -82,10 +82,6 @@ public class AddSessionCommand extends Command {
 
         GroupName targetGroup = model.getActiveGroupName()
                 .orElseThrow(() -> new CommandException(MESSAGE_NO_ACTIVE_GROUP));
-        String commandDescription = COMMAND_WORD + " d/" + sessionDate
-                + (note.isBlank() ? "" : " n/" + note);
-        SessionCommandHistory.record(model, commandDescription);
-
         int createdCount = 0;
         int existingCount = 0;
         int studentsInGroup = 0;

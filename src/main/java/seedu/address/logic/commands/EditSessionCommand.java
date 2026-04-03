@@ -79,11 +79,6 @@ public class EditSessionCommand extends Command {
         GroupName targetGroup = model.getActiveGroupName()
                 .orElseThrow(() -> new CommandException(MESSAGE_NO_ACTIVE_GROUP));
         LocalDate targetDate = newDate.orElse(originalDate);
-        String commandDescription = COMMAND_WORD + " d/" + originalDate
-                + newDate.map(date -> " nd/" + date).orElse("")
-                + newNote.filter(note -> !note.isBlank()).map(note -> " nn/" + note).orElse("");
-        SessionCommandHistory.record(model, commandDescription);
-
         boolean foundOriginal = false;
         for (Person person : List.copyOf(model.getAddressBook().getPersonList())) {
             if (!person.hasGroup(targetGroup)) {
