@@ -15,6 +15,7 @@ import seedu.address.logic.commands.PartCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.group.GroupName;
 import seedu.address.model.person.Participation;
+import seedu.address.model.person.Session;
 
 public class PartCommandParserTest {
 
@@ -49,5 +50,11 @@ public class PartCommandParserTest {
     public void parse_invalidDate_throwsParseException() {
         // to verify that it throws parse exception for an invalid date
         assertThrows(ParseException.class, () -> parser.parse(" i/1 d/2026-13-01 pv/4"));
+    }
+
+    //@@author Ch3ngK
+    @Test
+    public void parse_invalidDate_failure() {
+        assertParseFailure(parser, " i/1 pv/3 d/2026-04-300", Session.MESSAGE_CONSTRAINTS);
     }
 }

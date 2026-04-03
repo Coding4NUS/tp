@@ -14,6 +14,7 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.MarkCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.group.GroupName;
+import seedu.address.model.person.Session;
 
 public class MarkCommandParserTest {
 
@@ -47,5 +48,11 @@ public class MarkCommandParserTest {
     @Test
     public void parse_invalidDate_throwsParseException() {
         assertThrows(ParseException.class, () -> parser.parse(" i/1 d/2026-13-01"));
+    }
+
+    //@@author Ch3ngK
+    @Test
+    public void parse_invalidDate_failure() {
+        assertParseFailure(parser, " i/1 d/2026-04-300", Session.MESSAGE_CONSTRAINTS);
     }
 }
