@@ -275,7 +275,7 @@ public class ParserUtil {
         requireNonNull(date);
         String trimmedDate = date.trim();
         if (trimmedDate.isEmpty()) {
-            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+            throw new ParseException(Session.BLANK_DATE_MESSAGE);
         }
         try {
             return LocalDate.parse(trimmedDate, Session.DATE_FORMATTER);
