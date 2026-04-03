@@ -695,8 +695,6 @@ Rerun TAA and `John` will now be loaded into the contact list!
 
 </panel>
 
-</>
-
 <panel id="faq-invalid_groups" header="What happens if my manually edited groups are invalid?" type="seamless" expanded>
 
 You will see an error message telling you how many groups are invalid once TAA starts running.
