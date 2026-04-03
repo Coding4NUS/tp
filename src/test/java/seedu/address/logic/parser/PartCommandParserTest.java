@@ -3,6 +3,7 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.testutil.Assert.assertThrows;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.PartCommand;
+import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.group.GroupName;
 import seedu.address.model.person.Participation;
 
@@ -41,5 +43,11 @@ public class PartCommandParserTest {
     public void parse_missingIndex_failure() {
         assertParseFailure(parser, " pv/3",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, PartCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_invalidDate_throwsParseException() {
+        // to verify that it throws parse exception for an invalid date
+        assertThrows(ParseException.class, () -> parser.parse(" i/1 d/2026-13-01 pv/4"));
     }
 }
