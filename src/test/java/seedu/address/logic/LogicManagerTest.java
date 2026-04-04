@@ -96,7 +96,8 @@ public class LogicManagerTest {
 
     @Test
     public void execute_blankCommandInAllStudentsView_throwsParseException() {
-        assertParseException("   ", String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, seedu.address.logic.commands.HelpCommand.MESSAGE_USAGE));
+        assertParseException("   ", String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
+                seedu.address.logic.commands.HelpCommand.MESSAGE_USAGE));
     }
 
     @Test
