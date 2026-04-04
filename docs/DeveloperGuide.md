@@ -129,8 +129,18 @@ How the parsing works:
 ### Model component
 **API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/java/seedu/address/model/Model.java)
 
--> <puml src="diagrams/ModelClassDiagram.puml" width="650px"/> <-
+-> <puml src="diagrams/ModelClassDiagram.puml" width="450px"/> <-
+-> <puml src="diagrams/PersonClassDiagram.puml" width="800px"/> <-
 
+<div class="invisible-table">
+
+|                                                               |                                                             |
+|:-------------------------------------------------------------:|:-----------------------------------------------------------:|
+| <puml src="diagrams/SessionClassDiagram.puml" width="600px"/> | <puml src="diagrams/GroupClassDiagram.puml" width="300px"/> |
+
+</div>
+
+<div style="page-break-after: always;"></div>
 
 The `Model` component,
 
