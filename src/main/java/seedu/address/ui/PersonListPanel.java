@@ -308,7 +308,8 @@ public class PersonListPanel extends UiPart<Region> {
         List<YearHeaderGroup> yearGroups = addYearHeaderRow(sessionDates, activeSessionDate);
         for (int columnIndex = 0; columnIndex < sessionDates.size(); columnIndex++) {
             LocalDate sessionDate = sessionDates.get(columnIndex);
-            Label headerLabel = createHeaderLabel(formatMatrixHeaderDate(sessionDates, columnIndex), false, sessionDate);
+            Label headerLabel = createHeaderLabel(
+                    formatMatrixHeaderDate(sessionDates, columnIndex), false, sessionDate);
             if (sessionDate.equals(activeSessionDate)) {
                 headerLabel.getStyleClass().add("attendance-matrix-header-active");
             }
