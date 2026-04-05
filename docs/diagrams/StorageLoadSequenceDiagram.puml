@@ -40,3 +40,4 @@ deactivate JsonAddressBookStorage
 deactivate StorageManager
 
 @enduml
+

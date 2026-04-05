@@ -418,7 +418,7 @@ The term `contacts` and `students` are used interchangeably in user stories and 
     * 1b2. User re-enters corrected fields.
 
         Steps 1b1-1b2 are repeated till all fields are correct.
-        
+       
         Use case ends resumes from step 1.
 
 * 1c. TAA detects a duplicate matriculation number in existing contacts.
@@ -427,7 +427,7 @@ The term `contacts` and `students` are used interchangeably in user stories and 
     * 1c2. User re-enters the matriculation number field.
   
         Steps 1c1-1c2 are repeated until contact is no longer a duplicate.
-  
+
         Use case resumes from step 1.
 ---
 
