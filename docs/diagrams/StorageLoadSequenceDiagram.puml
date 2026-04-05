@@ -1,6 +1,7 @@
 @startuml
 !include style.puml
 skinparam ArrowFontStyle plain
+skinparam defaultFontSize 14
 
 box Storage STORAGE_COLOR_T1
 participant ":StorageManager" as StorageManager STORAGE_COLOR
