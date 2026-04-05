@@ -38,6 +38,7 @@ public class ModelManagerTest {
 
     @Test
     public void constructor_withSavedViewContext_startsAtHomeView() {
+        // EP: saved view context in user preferences -> start in home view with cleared context
         AddressBook addressBook = new AddressBookBuilder().build();
         addressBook.addGroup(new Group(new GroupName("T01")));
         UserPrefs userPrefs = new UserPrefs();
@@ -54,18 +55,20 @@ public class ModelManagerTest {
 
     @Test
     public void setUserPrefs_nullUserPrefs_throwsNullPointerException() {
+        // EP: null user preferences -> throws NullPointerException
         assertThrows(NullPointerException.class, () -> modelManager.setUserPrefs(null));
     }
 
     @Test
     public void setUserPrefs_validUserPrefs_copiesUserPrefs() {
+        // EP: valid user preferences -> copy user preferences into model manager
         UserPrefs userPrefs = new UserPrefs();
         userPrefs.setAddressBookFilePath(Paths.get("address/book/file/path"));
         userPrefs.setGuiSettings(new GuiSettings(1, 2, 3, 4));
         modelManager.setUserPrefs(userPrefs);
         assertEquals(userPrefs, modelManager.getUserPrefs());
 
-        // Modifying userPrefs should not modify modelManager's userPrefs
+        // EP: modify user preferences-> user preferences in model manager not modified
         UserPrefs oldUserPrefs = new UserPrefs(userPrefs);
         userPrefs.setAddressBookFilePath(Paths.get("new/address/book/file/path"));
         assertEquals(oldUserPrefs, modelManager.getUserPrefs());
@@ -73,11 +76,13 @@ public class ModelManagerTest {
 
     @Test
     public void setGuiSettings_nullGuiSettings_throwsNullPointerException() {
+        // EP: null gui settings -> throws NullPointerException
         assertThrows(NullPointerException.class, () -> modelManager.setGuiSettings(null));
     }
 
     @Test
     public void setGuiSettings_validGuiSettings_setsGuiSettings() {
+        // EP: valid gui settings -> set gui settings
         GuiSettings guiSettings = new GuiSettings(1, 2, 3, 4);
         modelManager.setGuiSettings(guiSettings);
         assertEquals(guiSettings, modelManager.getGuiSettings());
@@ -85,11 +90,13 @@ public class ModelManagerTest {
 
     @Test
     public void setAddressBookFilePath_nullPath_throwsNullPointerException() {
+        // EP: null file path -> throws NullPointerException
         assertThrows(NullPointerException.class, () -> modelManager.setAddressBookFilePath(null));
     }
 
     @Test
     public void setAddressBookFilePath_validPath_setsAddressBookFilePath() {
+        // EP: valid file path -> set address book file path
         Path path = Paths.get("address/book/file/path");
         modelManager.setAddressBookFilePath(path);
         assertEquals(path, modelManager.getAddressBookFilePath());
@@ -97,16 +104,19 @@ public class ModelManagerTest {
 
     @Test
     public void hasPerson_nullPerson_throwsNullPointerException() {
+        // EP: null person -> throws NullPointerException
         assertThrows(NullPointerException.class, () -> modelManager.hasPerson(null));
     }
 
     @Test
     public void hasPerson_personNotInAddressBook_returnsFalse() {
+        // EP: person not in address book -> returns false
         assertFalse(modelManager.hasPerson(ALICE));
     }
 
     @Test
     public void hasPerson_personInAddressBook_returnsTrue() {
+        // EP: person present in address book -> returns true
         modelManager.addPerson(ALICE);
         assertTrue(modelManager.hasPerson(ALICE));
     }
@@ -118,6 +128,7 @@ public class ModelManagerTest {
 
     @Test
     public void switchToAllStudentsView_afterSortedFind_restoresOriginalOrder() {
+        // EP: switch to current view: all students from filtered view -> list indexes remains the same
         AddressBook addressBook = new AddressBookBuilder().withPerson(ALICE).withPerson(BENSON).build();
         modelManager = new ModelManager(addressBook, new UserPrefs());
 
@@ -145,6 +156,7 @@ public class ModelManagerTest {
 
     @Test
     public void switchToGroupView_clearsSessionSpecificContext() {
+        // EP: switch from one group view to another -> clear session-specific context and update active group
         AddressBook addressBook = new AddressBookBuilder().build();
         GroupName currentGroup = new GroupName("T01");
         GroupName targetGroup = new GroupName("T02");
@@ -170,24 +182,24 @@ public class ModelManagerTest {
         AddressBook differentAddressBook = new AddressBook();
         UserPrefs userPrefs = new UserPrefs();
 
-        // same values -> returns true
+        // EP: same values -> returns true
         modelManager = new ModelManager(addressBook, userPrefs);
         ModelManager modelManagerCopy = new ModelManager(addressBook, userPrefs);
         assertTrue(modelManager.equals(modelManagerCopy));
 
-        // same object -> returns true
+        // EP: same object -> returns true
         assertTrue(modelManager.equals(modelManager));
 
-        // null -> returns false
+        // EP: null -> returns false
         assertFalse(modelManager.equals(null));
 
-        // different types -> returns false
+        // EP: different types -> returns false
         assertFalse(modelManager.equals(5));
 
-        // different addressBook -> returns false
+        // EP: different address book -> returns false
         assertFalse(modelManager.equals(new ModelManager(differentAddressBook, userPrefs)));
 
-        // different filteredList -> returns false
+        // EP: different filtered person list state -> returns false
         modelManager.updateFilteredPersonList(new PersonMatchesFieldsPredicate(
                 Arrays.asList(ALICE.getName().fullName.split("\\s+")),
                 Collections.emptyList(),
@@ -199,17 +211,17 @@ public class ModelManagerTest {
         // resets modelManager to initial state for upcoming tests
         modelManager.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
-        // different userPrefs -> returns false
+        // EP: different user preferences -> returns false
         UserPrefs differentUserPrefs = new UserPrefs();
         differentUserPrefs.setAddressBookFilePath(Paths.get("differentFilePath"));
         assertFalse(modelManager.equals(new ModelManager(addressBook, differentUserPrefs)));
 
-        // different attendance view mode -> returns false
+        // EP: different attendance view mode -> returns false
         ModelManager attendanceViewModel = new ModelManager(addressBook, userPrefs);
         attendanceViewModel.setAttendanceViewActive(true);
         assertFalse(modelManager.equals(attendanceViewModel));
 
-        // different active session date -> returns false
+        // EP: different active session date -> returns false
         ModelManager activeSessionModel = new ModelManager(addressBook, userPrefs);
         activeSessionModel.setActiveSessionDate(LocalDate.of(2026, 3, 16));
         assertFalse(modelManager.equals(activeSessionModel));
