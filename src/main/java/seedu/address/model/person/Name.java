@@ -10,7 +10,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Name {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Names cannot be blank. Characters like ; and <> are invalid.";
+            "Names cannot be blank. Characters like semicolons and <> are invalid.";
 
     /*
      * The first character of the name must start with a Unicode letter and
