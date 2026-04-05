@@ -60,48 +60,57 @@ public class LogicManagerTest {
 
     @Test
     public void execute_invalidCommandFormat_throwsParseException() {
+        // EP: unknown command word -> throws ParseException
         String invalidCommand = "uicfhmowqewca";
         assertParseException(invalidCommand, MESSAGE_UNKNOWN_COMMAND);
     }
 
     @Test
     public void execute_markCommandInAllStudentsView_throwsParseException() {
+        // EP: mark command in current view: all-students -> throws ParseException
         assertParseException("mark i/1", MarkCommand.MESSAGE_REQUIRES_GROUP_VIEW);
     }
 
     @Test
     public void execute_unmarkCommandInAllStudentsView_throwsParseException() {
+        // EP: unmark command in current view: all-students -> throws ParseException
         assertParseException("unmark i/1", UnmarkCommand.MESSAGE_REQUIRES_GROUP_VIEW);
     }
 
     @Test
     public void execute_partCommandInAllStudentsView_throwsParseException() {
+        // EP: part command in current view: all-students -> throws ParseException
         assertParseException("part i/1 pv/5", PartCommand.MESSAGE_REQUIRES_GROUP_VIEW);
     }
 
     @Test
     public void execute_malformedMarkCommandInAllStudentsView_throwsParseException() {
+        // EP: malformed mark command in current view: all-students -> require group view message
         assertParseException("mark invalid input", MarkCommand.MESSAGE_REQUIRES_GROUP_VIEW);
     }
 
     @Test
     public void execute_malformedUnmarkCommandInAllStudentsView_throwsParseException() {
+        // EP: malformed unmark command in current view: all-students -> require group view message
         assertParseException("unmark nonsense", UnmarkCommand.MESSAGE_REQUIRES_GROUP_VIEW);
     }
 
     @Test
     public void execute_malformedPartCommandInAllStudentsView_throwsParseException() {
+        // EP: malformed part command in current view: all-students -> require group view message
         assertParseException("part garbage", PartCommand.MESSAGE_REQUIRES_GROUP_VIEW);
     }
 
     @Test
     public void execute_blankCommandInAllStudentsView_throwsParseException() {
+        // EP: blank command -> throws ParseException with invalid command format message
         assertParseException("   ", String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
                 seedu.address.logic.commands.HelpCommand.MESSAGE_USAGE));
     }
 
     @Test
     public void execute_markCommandInGroupView_parsesNormally() {
+        // EP: malformed mark command in group view -> throws ParseException
         GroupName tutorialGroup = new GroupName("CS2103T-T01");
         model.addGroup(new Group(tutorialGroup));
         model.switchToGroupView(tutorialGroup);
@@ -121,24 +130,28 @@ public class LogicManagerTest {
 
     @Test
     public void execute_commandExecutionError_throwsCommandException() {
+        // EP: invalid index -> throws CommandException
         String deleteCommand = "delete i/9";
         assertCommandException(deleteCommand, MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
 
     @Test
     public void execute_validCommand_success() throws Exception {
+        // EP: valid command input -> executes successfully
         String listCommand = ListCommand.COMMAND_WORD;
         assertCommandSuccess(listCommand, ListCommand.MESSAGE_SUCCESS, model);
     }
 
     @Test
     public void execute_storageThrowsIoException_throwsCommandException() {
+        // EP: storage save throws IOException -> throws CommandException
         assertCommandFailureForExceptionFromStorage(DUMMY_IO_EXCEPTION, String.format(
                 LogicManager.FILE_OPS_ERROR_FORMAT, DUMMY_IO_EXCEPTION.getMessage()));
     }
 
     @Test
     public void execute_storageThrowsAdException_throwsCommandException() {
+        // EP: storage save throws AccessDeniedException -> throws CommandException
         assertCommandFailureForExceptionFromStorage(DUMMY_AD_EXCEPTION, String.format(
                 LogicManager.FILE_OPS_PERMISSION_ERROR_FORMAT, DUMMY_AD_EXCEPTION.getMessage()));
     }

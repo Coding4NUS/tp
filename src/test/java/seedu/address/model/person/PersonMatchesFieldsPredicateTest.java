@@ -29,7 +29,7 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        // identical predicate -> returns true
+        // EP: identical predicate -> returns true
         assertTrue(firstPredicate.equals(new PersonMatchesFieldsPredicate(
                 Collections.singletonList("Alex"),
                 Collections.emptyList(),
@@ -37,13 +37,13 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.emptyList(),
                 Collections.emptyList())));
 
-        // predicate equals number -> returns false
+        // EP: predicate equals number -> returns false
         assertFalse(firstPredicate.equals(1));
 
-        // predicate equals null -> returns false
+        // EP: predicate equals null -> returns false
         assertFalse(firstPredicate.equals(null));
 
-        // different search values -> returns false
+        // EP: different search values -> returns false
         assertFalse(firstPredicate.equals(secondPredicate));
     }
 
@@ -57,13 +57,13 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        // search lists are empty -> returns false
+        // EP: search lists are empty -> returns false
         assertFalse(predicate.test(person));
 
-        // zero search parameters match -> return 0
+        // EP: zero search parameters match -> return 0
         assertEquals(0, predicate.getMatchedCriteriaCount(person));
 
-        // zero exact matches -> return 0
+        // EP: zero exact matches -> return 0
         assertEquals(0, predicate.getExactMatchCount(person));
     }
 
@@ -77,13 +77,13 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        // partial name matching -> returns true
+        // EP: partial name matching -> returns true
         assertTrue(predicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, predicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 0
+        // EP: exact matches -> returns 0
         assertEquals(0, predicate.getExactMatchCount(person));
     }
 
@@ -97,13 +97,13 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        // exact name matching -> returns true
+        // EP: exact name matching -> returns true
         assertTrue(predicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, predicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 1
+        // EP: exact matches -> returns 1
         assertEquals(1, predicate.getExactMatchCount(person));
     }
 
@@ -125,22 +125,22 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        // partial phone matching -> returns true
+        // EP: partial phone matching -> returns true
         assertTrue(partialPredicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, partialPredicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 0
+        // EP: exact matches -> returns 0
         assertEquals(0, partialPredicate.getExactMatchCount(person));
 
-        // exact phone matching -> returns true
+        // EP: exact phone matching -> returns true
         assertTrue(exactPredicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, exactPredicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 1
+        // EP: exact matches -> returns 1
         assertEquals(1, exactPredicate.getExactMatchCount(person));
     }
 
@@ -162,22 +162,22 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        // partial email matching -> returns true
+        // EP: partial email matching -> returns true
         assertTrue(partialPredicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, partialPredicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 0
+        // EP: exact matches -> returns 0
         assertEquals(0, partialPredicate.getExactMatchCount(person));
 
-        // exact email matching -> returns true
+        // EP: exact email matching -> returns true
         assertTrue(exactPredicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, exactPredicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 1
+        // EP: exact matches -> returns 1
         assertEquals(1, exactPredicate.getExactMatchCount(person));
     }
 
@@ -199,22 +199,22 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.singletonList("A1234567X"),
                 Collections.emptyList());
 
-        // partial matriculation matching -> returns true
+        // EP: partial matriculation matching -> returns true
         assertTrue(partialPredicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, partialPredicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 0
+        // EP: exact matches -> returns 0
         assertEquals(0, partialPredicate.getExactMatchCount(person));
 
-        // exact matriculation matching -> returns true
+        // EP: exact matriculation matching -> returns true
         assertTrue(exactPredicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, exactPredicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 1
+        // EP: exact matches -> returns 1
         assertEquals(1, exactPredicate.getExactMatchCount(person));
     }
 
@@ -238,22 +238,22 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.emptyList(),
                 Collections.singletonList("friends"));
 
-        // partial tag matching -> returns true
+        // EP: partial tag matching -> returns true
         assertTrue(partialPredicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, partialPredicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 0
+        // EP: exact matches -> returns 0
         assertEquals(0, partialPredicate.getExactMatchCount(person));
 
-        // exact tag matching -> returns true
+        // EP: exact tag matching -> returns true
         assertTrue(exactPredicate.test(person));
 
-        // one criteria matches -> returns 1
+        // EP: one criteria matches -> returns 1
         assertEquals(1, exactPredicate.getMatchedCriteriaCount(person));
 
-        // exact matches -> returns 0
+        // EP: exact matches -> returns 0
         assertEquals(1, exactPredicate.getExactMatchCount(person));
     }
 
@@ -274,10 +274,10 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.singletonList("a123"),
                 Collections.singletonList("FRIENDS"));
 
-        // case-insensitive -> returns true
+        // EP: case-insensitive -> returns true
         assertTrue(predicate.test(person));
 
-        // 5 case-insensitive criteria matches -> returns 5
+        // EP: 5 case-insensitive criteria matches -> returns 5
         assertEquals(5, predicate.getMatchedCriteriaCount(person));
     }
 
@@ -298,13 +298,13 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.singletonList("A123"),
                 Arrays.asList("friends", "enemy"));
 
-        // match at least 1 criterion -> returns true
+        // EP: match at least 1 criterion -> returns true
         assertTrue(predicate.test(person));
 
-        // matches 5 criteria partially -> returns 5
+        // EP: matches 5 criteria partially -> returns 5
         assertEquals(5, predicate.getMatchedCriteriaCount(person));
 
-        // matches 3 criteria exactly -> returns 3
+        // EP: matches 3 criteria exactly -> returns 3
         assertEquals(3, predicate.getExactMatchCount(person));
     }
 
@@ -325,13 +325,13 @@ public class PersonMatchesFieldsPredicateTest {
                 Collections.singletonList("B0000000Z"),
                 Collections.singletonList("family"));
 
-        // no matches -> returns false
+        // EP: no matches -> returns false
         assertFalse(predicate.test(person));
 
-        // matches 0 criteria partially -> returns 0
+        // EP: matches 0 criteria partially -> returns 0
         assertEquals(0, predicate.getMatchedCriteriaCount(person));
 
-        // matches 0 criteria exactly -> returns 0
+        // EP: matches 0 criteria exactly -> returns 0
         assertEquals(0, predicate.getExactMatchCount(person));
     }
 }
