@@ -18,15 +18,15 @@ Teacher Assistant's Assistant (TAA) is a **desktop app for Manage all student-re
 1. Ensure you have Java `17` or above installed in your Computer.<br>
    **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
-1. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-F14-1/tp/releases/latest).
+2. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-F14-1/tp/releases/latest).
 
-1. Copy the file to the folder you want to use as the _home folder_ for your AddressBook.
+3. Copy the file to the folder you want to use as the _home folder_ for your AddressBook.
 
-1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.<br>
+4. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.<br>
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 
-1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
+5. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
 
    * `list` : Lists all contacts in the current view.
@@ -39,7 +39,10 @@ Teacher Assistant's Assistant (TAA) is a **desktop app for Manage all student-re
 
    * `exit` : Exits the app.
 
-1. Refer to the [Features](#features) below for details of each command.
+6. Refer to the [Features](#features) below for details of each command.
+
+**Related FAQs:**
+* [What happens when I launch TAA for the first time?](#faq-first_time)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -102,8 +105,12 @@ Format: `add n/NAME p/PHONE e/EMAIL m/MATRICULATION_NUMBER [t/TAG]…​`
 
 <box type="tip" seamless>
 
-**Tip:** A person can have any number of tags (including 0)
+**Tip:** A person can have any number of tags (including 0).
 </box>
+
+**Related FAQs:**
+* [What are the valid formats for the fields of an `add` or `edit` command?](#faq-add_edit_valid_formats)
+* [What is considered a duplicate contact?](#faq-duplicate)
 
 Examples:
 * `add n/John Doe p/98765432 e/johnd@example.com m/A1234567X t/friends t/owesMoney`
@@ -134,6 +141,12 @@ Format: `edit i/INDEX [n/NAME] [p/PHONE] [e/EMAIL] [m/MATRICULATION_NUMBER] [t/T
 Examples:
 *  `edit i/1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `edit i/2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+
+**Related FAQs:**
+* [What are the valid formats for the fields of an `add` or `edit` command?](#faq-add_edit_valid_formats)
+* [What is considered a duplicate contact?](#faq-duplicate)
+* [What happens when I edit the tags of a contact?](#faq-edit_tags)
+* [How can I remove all tags from a contact?](#faq-remove_tags)
 
 ### Locating persons by parameters: `find`
 
@@ -452,29 +465,120 @@ Format: `exit`
 
 ### Saving the data
 
-AddressBook data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+Your data will be saved automatically as a JSON file `[JAR file location]/data/TAA_savefile.json` after any command that changes the data.
+You do not need to save any changes manually.
 
 ### Editing the data file
 
-AddressBook data are saved automatically as a JSON file `[JAR file location]/data/TAA_savefile.json`. Advanced users are welcome to update data directly by editing that data file.
+You are welcome to update data directly by editing the `TAA_savefile.json` data file. 
+We recommend that you back up your data before beginning.
 
-<box type="warning" seamless>
+You can edit the data file using pre-installed apps found on your computer:
+* **Windows:** Notepad
+* **MacOS:** TextEdit
+* **Linux:** gedit
 
-**Caution:**
-If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+<box type="warning">
+
+**WARNING:** 
+You should follow the format below closely to prevent an invalid data file.
+
 </box>
 
-### Archiving data files `[coming in v2.0]`
+```json
+{
+  "persons" : [ {
+    "name" : "NAME",
+    "phone" : "PHONE_NUMBER",
+    "email" : "EMAIL",
+    "matricNumber" : "MATRIC_NUMBER",
+    "attendance" : "ATTENDANCE_STATUS",
+    "participation" : PARTICIPATION_VALUE,
+    "tags" : [ "TAGS" ],
+    "groups" : [ "GROUP_NAME" ],
+    "groupSessions" : {
+      "GROUP_NAME" : [ {
+        "date" : "YYYY-MM-DD",
+        "attendance" : "ATTENDANCE_STATUS",
+        "participation" : PARTICIPATION_VALUE,
+        "note" : "NOTE"
+      } ]
+    },
+    "assignmentGrades" : {
+      "GROUP_NAME" : {
+        "ASSIGNMENT_NAME" : ASSIGNMENT_MARKS (integer, must be less than or equal to MAX_MARKS)
+      }
+    }
+  } ],
+  "groups" : [ {
+    "name" : "GROUP_NAME",
+    "assignments" : [ {
+      "name" : "ASSIGNMENT_NAME",
+      "dueDate" : "YYYY-MM-DD",
+      "maxMarks" : MAX_MARKS
+    } ]
+  } ]
+}
+```
+<panel header="Here's an example of how a manually edited `TAA_savefile.json` looks like!" type="seamless">
 
-_Details coming soon ..._
+The example below will load 1 contact, named `John`, belonging to the group `T02` with an assignment named `Assignment 1` where he has scored 100 / 100 marks. <br>
+`John` is present on the session on 2026-04-03, in which he has a participation value of 3.
 
---------------------------------------------------------------------------------------------------------------------
+```json
+{
+  "persons" : [ {
+    "name" : "John",
+    "phone" : "12345678",
+    "email" : "example@gmail.com",
+    "matricNumber" : "A1234567X",
+    "attendance" : "PRESENT",
+    "participation" : 3,
+    "tags" : [ ],
+    "groups" : [ "T02" ],
+    "groupSessions" : {
+      "T02" : [ {
+        "date" : "2026-04-03",
+        "attendance" : "PRESENT",
+        "participation" : 3,
+        "note" : ""
+      } ]
+    },
+    "assignmentGrades" : {
+      "T02" : {
+        "Assignment 1" : 100
+      }
+    }
+  } ],
+  "groups" : [ {
+    "name" : "T02",
+    "assignments" : [ {
+      "name" : "Assignment 1",
+      "dueDate" : "2026-05-01",
+      "maxMarks" : 100
+    } ]
+  } ]
+}
+```
+</panel>
 
-## FAQ
+<box type="tip" seamless>
 
-**Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+**Tip:**
+If your changes to the data file makes its format invalid, TAA will not load your contacts and will not overwrite your data file. This means that any changes you make will not be saved.
+<br>You should close TAA and manually fix the data file before continuing your use of the app.
+</box>
+
+**Related FAQs:**
+
+* [How do I back up my data?](#faq-backup)
+* [How do I transfer my data to another computer?](#faq-transfer)
+* [I edited the data file manually and TAA no longer works. What should I do?](#faq-not_working)
+* [I see `preservedSkippedPersons`, `preservedSkippedGroups` and `loadWarnings` in my data file. What are they?](#faq-unknown_sections)
+* [What happens if my manually edited person contacts are invalid?](#faq-invalid_persons)
+* [What happens if my manually edited groups are invalid?](#faq-invalid_groups)
+* [What is considered a duplicate contact?](#faq-duplicate)
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -517,3 +621,291 @@ Action     | Format, Examples
 **Rename Group**   | `renamegroup g/OLD_GROUP_NAME new/NEW_GROUP_NAME` <br> e.g., `renamegroup g/T01 new/Tutorial-01`
 **Switch Group**   | `switchgroup g/GROUP_NAME` `switchgroup all` <br> e.g., `switchgroup g/T01`
 **Unmark Attendance**   | `unmark i/INDEX d/YYYY-MM-DD` <br> e.g., `unmark i/1 d/2026-03-16`
+
+-----------------------------------------------
+
+## Frequently Asked Questions (FAQs)
+
+<panel id="faq-add_edit_valid_formats" header="What are the valid formats for the fields of an `add` or `edit` command?" type="seamless" expanded>
+
+
+* **Name:** Cannot start or end with a space, apostrophe (`'`), hyphen (`-`), or forward slash (`/`) and must adhere to these constraints:
+  * Separators like apostrophes, hyphens and forward slashes must be followed by a letter, number or combining mark.
+    * Combining mark refers to characters like `á`, `é`, `í`, `ó`, `ú`.
+  * Valid name characters include: 
+    * Unicode letters (examples: `ã`, `ó`, `ô`, `ç`)
+    * Numbers
+    * Spaces
+    * Apostrophes
+    * Hyphens
+    * Forward slashes
+  * Examples: `Mary-Jane O'Brien`, `X Æ A-Xii`, `Renée`
+* **Phone:** Must only contain numbers and be at least 3 digits long
+  * Examples: `123`, `88702270`, `2244668899`
+* **Email:** Must be in format of local-part@domain and adhere to these constraints:
+  * The local-part should only contain alphanumeric characters and these special characters, excluding the parentheses, (+_.-). 
+  <br> The local-part may not start or end with any special characters.
+  * This is followed by a @ and then a domain name. The domain name is made up of domain labels separated by periods. The domain name must:
+    * End with a domain label at least 2 characters long
+    * Have each domain label start and end with alphanumeric characters
+    * Have each domain label consist of alphanumeric characters, separated only by hyphens, if any.
+  * Examples: `example@gmail.com`, `e1111111@u.nus.edu.sg`, `jack_neo@u.nus.edu.sg`
+* **Matriculation number:** Must be a valid NUS matriculation number, starting with `A`, followed by 7 digits, and end with a letter.
+  * Examples:`A0123456J`, `A0308440M`, `A0308676R`
+* **Tags:** Must only contain alphanumeric characters and cannot contain spaces.
+  * Examples:`groupB`, `exchangeStudent`, `bestFriends` 
+
+
+</panel>
+
+
+<panel id="faq-first_time" header="What happens when I launch TAA for the first time?" type="seamless" expanded>
+
+When you first launch TAA, a `data` folder should be created containing `TAA_savefile.json`, which is where the data is stored.
+<br> Sample data will be populated onto TAA. To clear all existing data and begin your use of TAA, run the command `clear`.
+
+</panel>
+
+<panel id="faq-backup" header="How do I back up my data?" type="seamless" expanded>
+
+1. Open the folder where `TAA.jar` is located.
+2. Locate the `data` folder, which contains `TAA_savefile.json`.
+3. Copy the `data` folder to another location of your choice.
+
+</panel>
+
+<panel id="faq-transfer" header="How do I transfer my data to another computer?" type="seamless" expanded>
+
+1. Ensure you have the [latest version of TAA installed](https://github.com/AY2526S2-CS2103T-F14-1/tp/releases) on the new computer.
+2. On your old computer, open the folder where `TAA.jar` is located.
+3. Locate the `data` folder, which contains `TAA_savefile.json`.
+4. Copy this `data` folder into another location of your choice on your new computer.
+5. Launch TAA on your new computer. A new `data` folder will be created. Replace this with the version from your old computer.
+6. Relaunch TAA. Your data should appear as they did in your old computer.
+
+</panel>
+
+<panel id="faq-not_working" header="I edited the data file manually and TAA no longer works. What should I do?" type="seamless" expanded>
+
+You should refer to the following FAQs for help on how to fix invalid contacts or groups:
+* [What happens if my manually edited person contacts are invalid?](#faq-invalid_persons)
+* [What happens if my manually edited groups are invalid?](#faq-invalid_groups)
+
+You can also refer to the section on [editing your data file](#editing-the-data-file) to see if there is any mismatch in format of your data file.
+
+Alternatively, you can do the following:
+* Restore from your previous backup: If you made a backup of your data file before editing, you can restore your work by replacing the `data` folder with the backup.
+* Start with a new data file: If no backup was made, you can delete the existing `data` folder, or choose to copy it to another location while you try to fix the `TAA_savefile.json`.
+  This will create a new data file when you launch TAA, allowing you to continue using it.
+
+</panel>
+
+<panel id="faq-unknown_sections" header="I see `preservedSkippedPersons`, `preservedSkippedGroups` and `loadWarnings` in my data file. What are they?" type="seamless" expanded>
+
+These sections will be loaded into your data file once you start TAA.
+<br> You can safely ignore these sections unless you want to start manually [editing your data file](#editing-the-data-file).
+
+```json
+  "preservedSkippedPersons" : [ ],
+  "preservedSkippedGroups" : [ ],
+  "loadWarnings" : [ ]
+```
+
+* `preservedSkippedPersons` holds all invalid person contacts.
+* `preservedSkippedGroups` holds all invalid groups.
+* `loadWarnings` holds warning messages, telling you why the respective person(s) or group(s) are invalid. <br>
+
+<box type="tip">
+
+**Tip:**
+You can read the <code>loadWarnings</code> as a reference to fix your data file.
+<br> If you fix all errors and rerun TAA, the warnings will be cleared. 
+<br> If errors remain, you will see updated warnings reflecting any outstanding issues.
+</box>
+
+</panel>
+
+<panel id="faq-invalid_persons" header="What happens if my manually edited person contacts are invalid?" type="seamless" expanded>
+
+You will see an error message telling you how many contacts are invalid once TAA starts running. 
+
+<box type="warning">
+
+**Warning:**
+Please close TAA before fixing the contacts, or your changes will be lost. <br>
+You can also refer to `loadWarnings` in the data file to see the errors for each contact.
+
+</box>
+
+You can fix the invalid contacts by editing them in the <code>preservedSkippedPersons</code> section of the data file.<br>
+Once these contacts are valid, TAA will automatically load these contacts on the next run and clear the <code>loadWarnings</code>.
+
+<panel header="Here's an example of how `preservedSkippedPersons` looks like if you run TAA with an invalid contact!" type="seamless" expanded>
+
+```json
+{
+  "preservedSkippedPersons": [
+    {
+      "name": "John",
+      "phone": "12345678",
+      "email": "example@gmail.com",
+      "matricNumber": "A1234567Y",
+      "attendance": "PRESENT",
+      "participation": 3,
+      "tags": [],
+      "groups": [],
+      "groupSessions": {
+      }
+    }
+  ],
+  "loadWarnings": [
+    "Skipped invalid contact 'John':\n- The matriculation number checksum letter is incorrect. For the given digits, it should be 'X'."
+  ]
+}
+```
+
+The `loadWarnings` tell us that `John` has an invalid matriculation number checksum and that it should be `X`. We can fix this by editing the matriculation number from `A1234567Y` to `A1234567X`. <br>
+Rerun TAA and `John` will now be loaded into the contact list!
+
+</panel>
+
+</panel>
+
+<panel id="faq-invalid_groups" header="What happens if my manually edited groups are invalid?" type="seamless" expanded>
+
+You will see an error message telling you how many groups are invalid once TAA starts running.
+
+<box type="warning">
+
+**Warning:**
+Please close TAA before fixing the groups, or your changes will be lost. <br>
+You can also refer to `loadWarnings` in the data file to see the errors for each group.
+
+</box>
+
+<box type="info">
+
+**Info:**
+Contacts that reference invalid groups will be considered invalid and moved to `preservedSkippedPersons`.<br>
+They will automatically be loaded back once the invalid group is fixed in `preservedSkippedGroups`.
+
+</box>
+
+You can fix the invalid groups by editing them in the <code>preservedSkippedGroups</code> section of the data file.<br>
+Once the groups are valid, TAA will automatically load these groups on the next run and clear the <code>loadWarnings</code>.
+
+<panel header="Here's an example of how `preservedSkippedGroups` looks if you run TAA with an invalid group!" type="seamless" expanded>
+
+```json
+{
+  "preservedSkippedPersons": [
+    {
+      "name": "John",
+      "phone": "12345678",
+      "email": "example@gmail.com",
+      "matricNumber": "A1234567X",
+      "attendance": "PRESENT",
+      "participation": 3,
+      "tags": [],
+      "groups": [
+        "T02"
+      ],
+      "groupSessions": {
+        "T02": [
+          {
+            "date": "2026-03-06",
+            "attendance": "PRESENT",
+            "participation": 3,
+            "note": ""
+          }
+        ]
+      },
+      "assignmentGrades": {
+        "T02": {
+          "Assignment 1": 100
+        }
+      }
+    }
+  ],
+  "preservedSkippedGroups": [
+    {
+      "name": "T02#",
+      "assignments": [
+        {
+          "name": "Assignment 1",
+          "dueDate": "2026-05-01",
+          "maxMarks": 100
+        }
+      ]
+    }
+  ],
+  "loadWarnings": [
+    "Skipped invalid group 'T02#':\n- Group names should only contain letters, numbers, spaces, hyphens, and underscores, and it should not be blank.",
+    "Skipped invalid contact 'John':\n- Person references group 'T02' which does not exist in the address book."
+  ]
+}
+```
+
+The `loadWarnings` tell us that the group `T02#` contains an illegal character, and `John` is invalid since group `T02` does not exist. We can fix this by fixing the group name to be `T02` in `preservedSkippedGroups`.<br>
+Rerun TAA and group `T02` will exist. `John` will also be loaded into the contact list and remains a part of `T02`!
+
+</panel>
+
+<panel id="faq-duplicate" header="What is considered a duplicate contact?" type="seamless" expanded>
+
+TAA considers 2 contacts to be duplicates if they share the same matriculation number (case-insensitive).
+
+This means that:
+- Two contacts with the same name but different matriculation numbers **are not** duplicates and can both exist. 
+- Two contacts with different names but the same matriculation number **are** duplicates.
+
+If you try to `add` a contact whose matriculation number already exists, or `edit` a contact such that its matriculation number would match an existing contact, TAA will reject it and not make any changes to the app.
+
+</panel>
+
+<panel id="faq-edit_tags" header="What happens when I edit the tags of a contact?" type="seamless" expanded>
+
+All existing tags of the contact will be removed and replaced by any new tags you add when running `edit i/INDEX t/TAG`. <br>
+**Here's an example**: if a contact has tags of `t/groupB` and `t/exchangeStudent`, running the command `edit i/INDEX t/groupA` will result in the contact only having the `t/groupA` tag.
+
+</panel>
+
+<panel id="faq-remove_tags" header="How can I remove all tags from a contact?" type="seamless" expanded>
+
+You can remove all tags from a contact by running `edit i/INDEX t/`, without specifying any tags.
+
+</panel>
+
+---------------------------------------------------
+
+## Troubleshooting
+
+### Manual editing
+
+You should refer to this section to find out more about some common errors faced when manually editing the data file.
+
+#### Troubleshooting manual editing of persons
+| Problem                                                              | Error shown                                                                            | How to fix                                                                                                              |
+|:---------------------------------------------------------------------|:---------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------|
+| Invalid or blank name                                                | TODO                                                                                   | Ensure that `Name` follows the constraints given in the error message                                                   |
+| Invalid or blank phone                                               | TODO                                                                                   | Ensure that `Phone` follows the constraints given in the error message                                                  |
+| Invalid or blank matriculation number                                | TODO                                                                                   | Ensure that `matricNumber` follows the constraints given in the error message.                                          |
+| Invalid matriculation number number checksum                         | TODO                                                                                   | Change the `matricNumber` checksum to the correct one as given in the error message.                                    |
+| Person has grades for a group they are not part of                   | `Person has grades for group 'X' but is not a member of it`                             | Add the respective group into `"groups": [ ]` for that person under `"persons": [ ]`.                                   |
+| Person has grades for an assignment that does not exist in the group | `Person has a grade for assignment 'X' in group 'Y', but that assignment does not exist` | Add the assignment into `"groups": [ ]`.<br> This is not the same `"groups": [ ]` as the one found in `"persons": [ ]`. |
+| Person has grades for an assignment that exceeds the max marks       | `Grade 'A' for assignment 'X' in group 'Y' exceeds max marks of 'B'`                     | Ensure that grade is below max marks for the assignment.                                                                |
+| Person has session for a group they are not a part of                | `Person has sessions for group 'X' but is not a member of it`                            | Ensure that person has matching groups in `"groups": [ ]` and `"groupSessions": { }` in `"persons": [ ]`.               |
+
+### Troubleshooting manual editing of groups
+| Problem | Error shown                                                                                                      | How to fix                                                                                                                     |
+:--------|:-----------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
+Invalid or blank group name | `Group names should only contain letters, numbers, spaces, hyphens, and underscores, and it should not be blank` | Ensure that the group name follows the constraints given in the error message.                                                               
+Duplicate group name | `Skipped duplicate group: 'X'` | Delete the group by deleting `{ "name": "X", "assignments": [ ] }` from `"preservedSkippedGroups": [ ]` , or rename the group. |
+Invalid or blank assignment name | `Assignment names should only contain alphanumeric characters and spaces, and should not be blank` | Ensure that the assignment name follows the constraints given in the error message.
+Assignment has non-positive max marks | `Max marks should be a positive integer` | Ensure that max marks is a positive integer. |
+
+
+
+
+
+
