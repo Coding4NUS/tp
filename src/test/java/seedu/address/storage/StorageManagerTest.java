@@ -68,12 +68,14 @@ public class StorageManagerTest {
 
     @Test
     public void getLastLoadWarnings_jsonAddressBookStorage_returnsWarnings() {
-        // storageManager in setUp() is already initialized with JsonAddressBookStorage
+        // EP: storageManager in setUp() is already initialized with JsonAddressBookStorage -> empty list
         assertEquals(java.util.List.of(), storageManager.getLastLoadWarnings());
     }
 
     @Test
     public void getLastLoadWarnings_notJsonAddressBookStorage_returnsEmptyList() {
+        // mainly to test for AddressBookStorage interface, which has no getLastLoadWarnings()
+        // for the case where the storage is not JsonAddressBookStorage in the future
         AddressBookStorage stubStorage = new AddressBookStorage() {
             @Override
             public Path getAddressBookFilePath() {
@@ -101,6 +103,7 @@ public class StorageManagerTest {
 
     @Test
     public void getLastLoadWarnings_afterReadingInvalidData_returnsWarnings() throws Exception {
+        // EP: produced warnings propagate to caller
         Path filePath = testFolder.resolve("invalidGroupAddressBook.json");
         String json = """
             {

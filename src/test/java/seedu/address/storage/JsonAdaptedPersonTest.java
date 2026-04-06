@@ -109,6 +109,7 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_invalidMatricNumber_throwsIllegalValueException() {
+        // EP: invalid matric number (white space)
         JsonAdaptedPerson person =
                 new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, INVALID_MATRIC_NUMBER, VALID_TAGS);
         String expectedMessage = MatricNumber.MESSAGE_CONSTRAINTS;
@@ -117,8 +118,17 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_nullMatricNumber_throwsIllegalValueException() {
+        // EP: null matric number
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, null, VALID_TAGS);
         String expectedMessage = String.format(MISSING_FIELD_MESSAGE_FORMAT, MatricNumber.class.getSimpleName());
+        assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
+    }
+
+    @Test
+    public void toModelType_blankMatricNumber_throwsIllegalValueException() {
+        // EP: blank matric number
+        JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, "", VALID_TAGS);
+        String expectedMessage = MatricNumber.MESSAGE_CONSTRAINTS;
         assertThrows(IllegalValueException.class, expectedMessage, person::toModelType);
     }
 
@@ -148,7 +158,7 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_multipleInvalidFields_throwsIllegalValueException() {
-        // Person with both an invalid email and an invalid matric number.
+        // EP: Person with both an invalid email and an invalid matric number.
         JsonAdaptedPerson person = new JsonAdaptedPerson(
                 VALID_NAME, VALID_PHONE, INVALID_EMAIL, "A1234567A", VALID_TAGS);
 
@@ -160,6 +170,7 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_invalidParticipation_throwsIllegalValueException() {
+        // EP: invalid participation score
         JsonAdaptedPerson person = new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_MATRIC_NUMBER,
                 VALID_ATTENDANCE, INVALID_PARTICIPATION, VALID_TAGS, VALID_GROUPS, NULL_GROUP_SESSIONS);
 
@@ -169,7 +180,7 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_invalidGroupNameInGrades_throwsIllegalValueException() {
-        // Group name key in assignmentGrades is invalid (empty string fails validation)
+        // EP: Group name key in assignmentGrades is invalid (empty string fails validation)
         Map<String, Map<String, Integer>> invalidGrades = Map.of(
                 " ", Map.of("Assignment 1", 50) // invalid group name
         );
@@ -182,7 +193,7 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_invalidAssignmentNameInGrades_throwsIllegalValueException() {
-        // Assignment name key in grades is invalid (empty string fails validation)
+        // EP: Assignment name key in grades is invalid (empty string fails validation)
         Map<String, Map<String, Integer>> invalidGrades = Map.of(
                 "CS2103T-T01", Map.of(" ", 50) // invalid assignment name
         );
@@ -195,6 +206,7 @@ public class JsonAdaptedPersonTest {
 
     @Test
     public void toModelType_negativeGradeValue_throwsIllegalValueException() {
+        // EP: assignment with negative max marks
         Map<String, Map<String, Integer>> invalidGrades = Map.of(
                 "CS2103T-T01", Map.of("Assignment 1", -1)
         );

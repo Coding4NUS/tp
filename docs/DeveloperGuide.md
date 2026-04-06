@@ -13,7 +13,8 @@ pageNav: 3
 
 ## **Acknowledgements**
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well }_
+* The algorithm used to calculate the matric number checksum was posted by Beng Hee Eu. It can be found [here](http://interrobeng.com/2014/01/19/nus-matriculation-number-check-digit-algorithm/). Our implementation was made based on his algorithm.
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -61,7 +62,7 @@ The *Sequence Diagram* below shows how the components interact with each other f
 Each of the four main components (also shown in the diagram above),
 
 * defines its *API* in an `interface` with the same name as the Component.
-* implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
+* implements its functionality using a concrete `{Component Name}Manager` class which follows the corresponding API `interface` mentioned in the previous point.
 
 For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
 
@@ -73,13 +74,13 @@ The sections below give more details of each component.
 
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/java/seedu/address/ui/Ui.java)
 
 -> <puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component" width="500px"/> <-
 
 The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/resources/view/MainWindow.fxml)
 
 The `UI` component,
 
@@ -92,7 +93,7 @@ The `UI` component,
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -127,7 +128,7 @@ How the parsing works:
 <div style="page-break-after: always;"></div>
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/java/seedu/address/model/Model.java)
 
 -> <puml src="diagrams/ModelClassDiagram.puml" width="450px"/> <-
 -> <puml src="diagrams/PersonClassDiagram.puml" width="800px"/> <-
@@ -164,9 +165,26 @@ The `Model` component,
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S2-CS2103T-F14-1/tp/blob/master/src/main/java/seedu/address/storage/Storage.java)
 
 -> <puml src="diagrams/StorageClassDiagram.puml" width="800px"/> <-
+
+The sequence diagram below illustrates the interactions within the `Storage` component when data is loaded during initialization.
+
+-> <puml src="diagrams/StorageLoadSequenceDiagram.puml" width="600px"/> <-
+
+<box type="info" seamless>
+
+**Note:** The lifeline for `JsonSerializableAddressBook` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+
+</box>
+
+How the load works:
+* `JsonAddressBookStorage` delegates to `JsonSerializableAddressBook#toModelType()` to parse the JSON data into `Model` objects. During this process, each person and group entry is validated against the current group and assignment data.
+* Entries with invalid fields, missing group references, or inconsistent assignment grades are skipped rather than causing the entire load to fail. The app continues loading with the remaining valid entries.
+* Skipped entries are preserved back into the data file on the next save, so no data is permanently lost. Warnings generated during this process are retrieved via `StorageManager#getLastLoadWarnings()` and displayed to the user on startup.
+* Previously skipped entries are re-attempted on every subsequent load. If the underlying issue has been resolved (e.g., a missing group was manually added back to the file), the entry will be successfully loaded on the next launch.
+* If the data file is blank or empty, the app loads sample data instead. If the file contains malformed JSON, the app starts with an empty address book and blocks all saves for that session to prevent overwriting the original file.
 
 The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
@@ -317,6 +335,12 @@ _{Explain here how the data archiving feature will be implemented}_
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
+<box type="info" seamless>
+
+The term `contacts` and `students` are used interchangeably in user stories and use cases.
+
+</box>
+
 | Priority | As a …​           | I want to …​                                                         | So that I can…​                                                                               |
 |----------|-------------------|----------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | `* * *`  | user              | add basic contact details                                            | add students to my app                                                                        |
@@ -360,6 +384,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | user              | sort students alphabetically                                         | view my student contacts in alphabetical order                                                |
 | `*`      | user              | sort students by tutorial groups                                     | view student contacts based on what tutorial group they are in                                |
 | `*`      | user              | view my students in a paginated list of 40 students per page         | view students page by page without having to keep scrolling down                              |
+|   `*`    | user              | undo my previous action                                              | undo my most recent command                                                                   |
+|   `*`    | user              | redo my previous action                                              | redo my most recent undo                                                                      |
 | `*`      | busy user         | set a recurring weekly schedule for a tutorial group                 | be reminded of when my tutorial sessions are                                                  |
 | `*`      | busy user         | add a temporary tutorial session                                     | keep track of additional tutorials like consultations or make-up classes                      |
 | `*`      | busy user         | view a list of my upcoming tutorials for the week                    | view how many remaining tutorial sessions I have for the week                                 |
@@ -369,33 +395,143 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | long-term user    | export the program data as a backup                                  | prevent losing all my data if I switch devices                                                |
 | `*`      | long-term user    | make new shortcuts for commands or strings                           | use the app more efficiently                                                                  |
 
-
 ---
 
 <div style="page-break-after: always;"></div>
 
 ### Use cases
 
-(For all use cases below, the **System** is the `Teacher Assistant's Assistant (TAA)` and the **Actor** is the `Teaching Assistant (TA)`, unless specified otherwise)
+(For all use cases below, the **System** is the `Teacher Assistant's Assistant (TAA)`, referred to as `TAA`, and the **Actor** is the `Teaching Assistant (TA)`, unless specified otherwise)
 
-**Use case: Switch to a class space**
+**Use case: UC1 - Add a contact**
 
 **MSS**
 
-1.  User requests to switch to a class space.
-2.  AddressBook switches the active class space and shows a confirmation message.
+1. User chooses to add a contact with the required details.
+2. TAA adds the contact.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. TAA detects missing fields.
+
+    * 1a1. TAA rejects the command.
+    * 1a2. User re-enters the command with the missing fields.
+  
+        Steps 1a1-1a2 are repeated till all fields are present.
+        Use case resumes from step 1.
+
+* 1b. TAA detects errors in fields provided.
+
+    * 1b1. TAA rejects the command.
+    * 1b2. User re-enters corrected fields.
+
+        Steps 1b1-1b2 are repeated till all fields are correct.
+       
+        Use case ends resumes from step 1.
+
+* 1c. TAA detects a duplicate matriculation number in existing contacts.
+
+    * 1c1. TAA rejects the command.
+    * 1c2. User re-enters the matriculation number field.
+  
+        Steps 1c1-1c2 are repeated until contact is no longer a duplicate.
+
+        Use case resumes from step 1.
+---
+
+**Use case: UC2 - Delete a contact**
+
+**MSS**
+
+1.  User requests to list contacts.
+2.  TAA shows a list of contacts.
+3.  User requests to delete a specific contact by index.
+4.  TAA deletes the contact.
 
     Use case ends.
 
 **Extensions**
 
-* 1a. The class space identifier is missing or invalid.
+* 2a. The list is empty. 
+
+    Use case ends.
+
+* 3a. The given index is invalid.
+
+    * 3a1. TAA rejects the command.
+    * 3a2. User re-enters command with a valid index.
+
+      Use case resumes at step 3.
+
+---
+
+**Use case: UC3 - Edit a contact**
+
+**MSS**
+
+1.  User requests to list contacts.
+2.  TAA shows a list of contacts.
+3.  User requests to edit a specific contact in the list by index.
+4.  TAA updates the contact.
+
+    Use case ends.
+
+**Extensions**
+
+* 3a. The given index is invalid.
+
+    * 3a1. TAA rejects the command.
+    * 3a2. User re-enters command with a valid index.
+
+      Use case resumes at step 3.
+
+* 3b. No fields to edit are provided.
+
+    * 3b1. TAA rejects the command.
+    * 3b2. User re-enters command with the missing fields.
+
+      Use case resumes at step 3.
+  
+* 3c. An edited field value is invalid.
+
+    * 3c1. TAA rejects the command.
+    * 3c2. User re-enters the command with the corrected fields.
+  
+        Steps 3c1-3c2 are repeated until the fields are valid.
+  
+        Use case resumes at step 3.
+  
+* 3d. The edit would result in a duplicate contact.
+
+    * 3d1. TAA rejects the command. 
+    * 3d2. User re-enters command with a different matriculation number.
+
+        Steps 3d1-3d2 are repeated until the contact is no longer a duplicate.     
+
+        Use case resumes at step 3.
+
+---
+
+**Use case: UC4 - Switch to a group view**
+
+**MSS**
+
+1.  User requests to switch to a group view.
+2.  AddressBook switches the active group view and shows a confirmation message.
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. The group view identifier is missing or invalid.
 
     * 1a1. AddressBook shows an error message.
 
       Use case ends.
 
-* 2a. The specified class space does not exist.
+* 2a. The specified group view does not exist.
 
     * 2a1. AddressBook shows an error message.
 
@@ -403,7 +539,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ---
 
-**Use case: Record class participation**
+**Use case: UC5 - Record class participation**
 
 **MSS**
 
@@ -430,7 +566,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ---
 
-**Use case: Record assignment submission**
+**Use case: UC6 - Record assignment submission**
 
 **MSS**
 
@@ -467,55 +603,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ---
 
-**Use case: Delete a person**
-
-**MSS**
-
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
-
-    Use case ends.
-
-**Extensions**
-
-* 2a. The list is empty.
-
-  Use case ends.
-
-* 3a. The given index is invalid.
-
-    * 3a1. AddressBook shows an error message.
-
-      Use case resumes at step 2.
-
----
-
-**Use case: Edit a contact**
-
-**MSS**
-
-1.  User requests to add a wrong contact
-2.  User requests to list persons
-3.  AddressBook shows a list of persons
-4.  User requests to delete that contact in the list
-5.  AddressBook deletes the person
-6.  User requests to add the correct contact
-
-    Use case ends.
-
-**Extensions**
-
-* 4a. The given index is invalid.
-
-    * 4a1. AddressBook shows an error message.
-
-      Use case resumes at step 3.
-
----
-
-**Use case: Mark attendance**
+**Use case: UC7 - Mark attendance**
 
 **MSS**
 
@@ -544,6 +632,87 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
       Use case resumes at step 2.
 
+**Use case: UC8 - Create a session for a group**  
+
+**MSS**
+1. User switches to a group.
+2. AddressBook shows the students in that group.
+3. User requests to create a session for a specific date.
+4. AddressBook creates the session for the group and shows a confirmation message.
+
+**Extensions**
+* 1a. The group does not exist.
+
+  * 1a1. AddressBook shows an error message.
+
+        Use case ends.
+
+* 3a. The date is invalid.
+
+  * 3a1. AddressBook shows an error message.
+
+        Use case ends.
+
+* 3b. A session already exists on that date.
+
+  * 3b1. AddressBook shows an error message.
+
+        Use case ends.    
+
+**Use case: UC7 - View attendance matrix for a group**
+
+**MSS**
+1. User requests to switch to a tutorial group.
+2. AddressBook switches to the specified group view.
+3. User requests to view attendance for the group.
+4. AddressBook displays the attendance matrix for the students in the group.
+
+   Use case ends.
+
+**Extensions**
+
+* 1a. The specified group does not exist.
+
+    * 1a1. AddressBook shows an error message.
+
+      Use case ends.
+
+* 3a. The group has no students.
+
+    * 3a1. AddressBook displays an empty attendance matrix or an appropriate empty-state message.
+
+      Use case ends.
+
+* 3b. The group has students but no recorded sessions.
+
+    * 3b1. AddressBook displays the attendance matrix without session columns, together with an appropriate empty-state message.
+
+      Use case ends.
+
+**Use case: UC8 - Export current view to CSV**
+
+Preconditions: A group is currently active (via UC01).
+
+MSS
+
+1. User requests to export the current attendance and participation view, optionally specifying a file path.
+2. TAA writes the data to the specified file (or a default filename) and shows a confirmation message with the path.
+
+   Use case ends.
+
+Extensions
+
+* 1a. No group is currently active.
+
+    * 1a1. TAA shows an error message.
+
+      Use case ends.
+
+* 1b. The file cannot be written (e.g., invalid path or insufficient permissions).
+
+    * 1b1. TAA shows an error message.
+
+      Use case ends.
 ---
 
 ### Non-Functional Requirements
@@ -624,3 +793,35 @@ testers are expected to do more *exploratory* testing.
    1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
 
 1. _{ more test cases …​ }_
+
+
+## Appendix: Effort
+
+### Difficulties & Challenges
+
+One major challenge was evolving AddressBook into a domain-specific application for TAs while still keeping the codebase maintainable. In particular, extending the model to support tutorial groups, per-group sessions, attendance, participation, and assignment grades required careful design to avoid tightly coupling unrelated features.
+
+Another challenge was preserving a smooth CLI workflow while introducing richer group-based and date-based operations. Commands such as attendance marking, participation recording, session management, and view filtering required additional parser and model logic, while still needing to remain intuitive for users.
+
+The team also had to ensure that invalid or partially corrupted saved data would not cause the entire application to fail. This required additional validation and recovery logic during loading, together with meaningful warnings for the user.
+
+### Effort & Achievements
+
+The project required substantial effort in both feature development and adaptation of the original architecture. Compared to the original AB3 codebase, TAA now supports tutorial-group management, attendance and participation tracking by session date, assignment management within groups, and filtered class views for teaching workflows.
+
+The team also improved robustness by validating saved data during loading, preserving skipped invalid entries, and surfacing warnings to the user instead of failing silently. On the UI side, the app was adapted to support attendance-oriented views and clearer group/session context.
+
+Overall, our team successfully transformed a generic contact-management application into a more task-focused teaching assistant management tool while preserving the strengths of the original CLI-based workflow.
+
+## Appendix: Planned Enhancements
+
+1. Add undo/redo support for data-changing commands.
+2. Improve the attendance and participation UI further for better readability across long academic timelines.
+3. Support importing and exporting data in more convenient formats such as CSV.
+4. Add recurring-session support for tutorial groups so weekly schedules can be created more efficiently.
+5. Improve accessibility through additional colour themes and colour-blind-friendly display options.
+6. Add more powerful search and filtering, such as combined filters for group, attendance, and assignment progress.
+7. Provide command shortcuts or aliases for frequently used workflows.
+8. Expand support for per-student notes and reminders.
+
+Team size: 5

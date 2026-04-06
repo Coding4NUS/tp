@@ -11,33 +11,45 @@ public class AssignmentNameTest {
 
     @Test
     public void constructor_null_throwsNullPointerException() {
+        // EP: null name
         assertThrows(NullPointerException.class, () -> new AssignmentName(null));
     }
 
     @Test
-    public void constructor_invalidAssignmentName_throwsIllegalArgumentException() {
+    public void constructor_emptyName_throwsIllegalArgumentException() {
+        // EP: empty name
         assertThrows(IllegalArgumentException.class, () -> new AssignmentName(""));
+    }
+
+    @Test
+    public void constructor_whiteSpace_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new AssignmentName(" "));
+    }
+
+    @Test
+    public void constructor_invalidAssignmentName_throwsIllegalArgumentException() {
+        // EP: invalid names
         assertThrows(IllegalArgumentException.class, () -> new AssignmentName("Test#"));
         assertThrows(IllegalArgumentException.class, () -> new AssignmentName("Quiz!1"));
     }
 
     @Test
     public void isValidAssignmentName() {
-        // null
+        // EP: null name is not valid
         assertFalse(AssignmentName.isValidAssignmentName(null));
 
-        // invalid — blank or empty
+        // EP: invalid name — blank or empty
         assertFalse(AssignmentName.isValidAssignmentName("")); // empty string
         assertFalse(AssignmentName.isValidAssignmentName(" ")); // spaces only
 
-        // invalid — special characters
+        // EP: invalid — special characters
         assertFalse(AssignmentName.isValidAssignmentName("Test#")); // hash
         assertFalse(AssignmentName.isValidAssignmentName("Quiz!1")); // exclamation
         assertFalse(AssignmentName.isValidAssignmentName("Lab@2")); // at sign
         assertFalse(AssignmentName.isValidAssignmentName("#Assignment")); // starts with special char
 
 
-        // valid
+        // EP: valid
         assertTrue(AssignmentName.isValidAssignmentName("Quiz")); // single word
         assertTrue(AssignmentName.isValidAssignmentName("Quiz 1")); // with space
         assertTrue(AssignmentName.isValidAssignmentName("Midterm Exam")); // multiple words
@@ -51,29 +63,29 @@ public class AssignmentNameTest {
     public void equals() {
         AssignmentName assignmentName = new AssignmentName("Quiz 1");
 
-        // same values -> returns true
+        // EP: same values -> returns true
         assertTrue(assignmentName.equals(new AssignmentName("Quiz 1")));
 
-        // same object -> returns true
+        // EP: same object -> returns true
         assertTrue(assignmentName.equals(assignmentName));
 
-        // case-insensitive -> returns true
+        // EP: case-insensitive -> returns true
         assertTrue(assignmentName.equals(new AssignmentName("QUIZ 1")));
         assertTrue(assignmentName.equals(new AssignmentName("quiz 1")));
 
         // null -> returns false
         assertFalse(assignmentName.equals(null));
 
-        // different types -> returns false
+        // EP: different types -> returns false
         assertFalse(assignmentName.equals(5.0f));
 
-        // different values -> returns false
+        // EP: different values -> returns false
         assertFalse(assignmentName.equals(new AssignmentName("Quiz 2")));
     }
 
     @Test
     public void hashCode_caseInsensitive() {
-        // Same name with different casing should produce same hashCode
+        // EP: Same name with different casing should produce same hashCode
         AssignmentName lower = new AssignmentName("quiz 1");
         AssignmentName upper = new AssignmentName("QUIZ 1");
         assertEquals(lower.hashCode(), upper.hashCode());

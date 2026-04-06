@@ -36,32 +36,33 @@ public class PersonTest {
 
     @Test
     public void isSamePerson() {
-        // same object -> returns true
+        // EP: same object -> returns true
         assertTrue(ALICE.isSamePerson(ALICE));
 
-        // null -> returns false
+        // EP: null -> returns false
         assertFalse(ALICE.isSamePerson(null));
 
-        // same matriculation number, all other attributes different -> returns true
+        // EP: same matriculation number, all other attributes different -> returns true
         Person editedAlice = new PersonBuilder(ALICE).withName(VALID_NAME_BOB).withPhone(VALID_PHONE_BOB)
                 .withEmail(VALID_EMAIL_BOB).withTags(VALID_TAG_HUSBAND).build();
         assertTrue(ALICE.isSamePerson(editedAlice));
 
-        // different matriculation number, all other attributes same -> returns false
+        // EP: different matriculation number, all other attributes same -> returns false
         editedAlice = new PersonBuilder(ALICE).withMatricNumber(VALID_MATRIC_NUMBER_BOB).build();
         assertFalse(ALICE.isSamePerson(editedAlice));
 
-        // name differs in case, but matriculation number is same -> returns true
+        // EP: name differs in case, but matriculation number is same -> returns true
         Person editedBob = new PersonBuilder(BOB).withName(VALID_NAME_BOB.toLowerCase()).build();
         assertTrue(BOB.isSamePerson(editedBob));
 
-        //different case for matriculation number -> returns true
+        // EP: different case for matriculation number -> returns true
         editedBob = new PersonBuilder(BOB).withMatricNumber(VALID_MATRIC_NUMBER_BOB_LOWERCASE).build();
         assertTrue(BOB.isSamePerson(editedBob));
     }
 
     @Test
     public void getOrCreateSession_sessionExists_returnsExistingSession() {
+        // EP: returns a session if it already exists
         LocalDate date = LocalDate.now();
         Session existingSession = new Session(date, new Attendance(Attendance.Status.PRESENT),
                 new Participation(FIVE_PARTICIPATION));
@@ -73,6 +74,8 @@ public class PersonTest {
 
     @Test
     public void getOrCreateSession_sessionDoesNotExist_returnsDefaultSession() {
+        // EP: creates a session if it does not exist
+        // session for that person default has 0 participation and uninitialised attendance
         LocalDate date = LocalDate.now();
         Person person = new PersonBuilder(ALICE).build(); // Person with no sessions.
 
@@ -89,6 +92,7 @@ public class PersonTest {
 
     @Test
     public void withUpdatedSession_addNewSession_returnsNewPersonWithSession() {
+        // EP: withUpdatedSession returns a new Person object
         Person originalPerson = new PersonBuilder(ALICE).build();
         LocalDate date = LocalDate.now();
         Session newSession = new Session(date, new Attendance(Attendance.Status.PRESENT),
@@ -98,12 +102,13 @@ public class PersonTest {
 
         // Check that the new person has the session, and the old one does not.
         assertFalse(originalPerson.equals(updatedPerson));
-        assertTrue(originalPerson.getGroupSessions().isEmpty());
+        assertFalse(originalPerson.getGroupSessions().containsKey(testGroup));
         assertEquals(newSession, updatedPerson.getOrCreateSession(testGroup, date));
     }
 
     @Test
     public void withUpdatedSession_updateExistingSession_returnsNewPersonWithUpdatedSession() {
+        // EP: updating existing session replaces currently existing session with a new one
         LocalDate date = LocalDate.now();
         Session initialSession = new Session(date, new Attendance(Attendance.Status.UNINITIALISED),
                 new Participation(ZERO_PARTICIPATION));
@@ -167,7 +172,7 @@ public class PersonTest {
 
     @Test
     public void equals_differentSessionMaps_returnsFalse() {
-        // Two persons, one with a session and one without.
+        // EP: Same person with and without a session are not equal
         Person personWithSession = new PersonBuilder(ALICE).build()
                 .withUpdatedSession(testGroup, new Session(LocalDate.now(),
                         new Attendance(Attendance.Status.PRESENT), new Participation(ONE_PARTICIPATION)));
@@ -206,7 +211,7 @@ public class PersonTest {
         editedAlice = new PersonBuilder(ALICE).withEmail(VALID_EMAIL_BOB).build();
         assertFalse(ALICE.equals(editedAlice));
 
-        // different matriculation number -> returns false
+        // EP: different matriculation number -> returns false
         editedAlice = new PersonBuilder(ALICE).withMatricNumber(VALID_MATRIC_NUMBER_BOB).build();
         assertFalse(ALICE.equals(editedAlice));
 
@@ -225,30 +230,34 @@ public class PersonTest {
 
     @Test
     public void hashCode_test() {
-        //same person, same hashcode.
+        // EP: same person, same hashcode.
         assertEquals(ALICE.hashCode(), ALICE.hashCode());
 
-        //different person, different hashcode.
+        // EP: different person, different hashcode.
         assertNotEquals(ALICE.hashCode(), BOB.hashCode());
     }
 
     @Test
     public void getNameValue_returnsFullNameString() {
+        // test that getNameValue() method works to return full name of person; meant for Law of Demeter uses
         assertEquals(ALICE.getName().fullName, ALICE.getNameValue());
     }
 
     @Test
     public void getPhoneValue_returnsPhoneString() {
+        // test that getPhoneValue() method works to return phone of person; meant for Law of Demeter uses
         assertEquals(ALICE.getPhone().value, ALICE.getPhoneValue());
     }
 
     @Test
     public void getEmailValue_returnsEmailString() {
+        // test that getEmailValue() method works to return email of person; meant for Law of Demeter uses
         assertEquals(ALICE.getEmail().value, ALICE.getEmailValue());
     }
 
     @Test
     public void getMatricNumberValue_returnsMatricNumberString() {
+        // test that getMatricNumber() method works to return matric number of person; meant for Law of Demeter uses
         assertEquals(ALICE.getMatricNumber().value, ALICE.getMatricNumberValue());
     }
 }

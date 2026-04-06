@@ -68,22 +68,17 @@ public class EditSessionCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
+        Optional<GroupName> originalActiveGroup = model.getActiveGroupName();
         if (groupName.isPresent()) {
             GroupName targetName = groupName.get();
             if (model.findGroupByName(targetName).isEmpty()) {
                 throw new CommandException(MESSAGE_GROUP_NOT_FOUND);
             }
-            model.switchToGroupView(targetName);
         }
 
-        GroupName targetGroup = model.getActiveGroupName()
+        GroupName targetGroup = groupName.or(() -> originalActiveGroup)
                 .orElseThrow(() -> new CommandException(MESSAGE_NO_ACTIVE_GROUP));
         LocalDate targetDate = newDate.orElse(originalDate);
-        String commandDescription = COMMAND_WORD + " d/" + originalDate
-                + newDate.map(date -> " nd/" + date).orElse("")
-                + newNote.filter(note -> !note.isBlank()).map(note -> " nn/" + note).orElse("");
-        SessionCommandHistory.record(model, commandDescription);
-
         boolean foundOriginal = false;
         for (Person person : List.copyOf(model.getAddressBook().getPersonList())) {
             if (!person.hasGroup(targetGroup)) {
@@ -130,7 +125,8 @@ public class EditSessionCommand extends Command {
             model.setPerson(person, updatedPerson);
         }
 
-        if (model.getActiveSessionDate().filter(originalDate::equals).isPresent()
+        if (originalActiveGroup.filter(targetGroup::equals).isPresent()
+                && model.getActiveSessionDate().filter(originalDate::equals).isPresent()
                 && !targetDate.equals(originalDate)) {
             model.setActiveSessionDate(targetDate);
         }

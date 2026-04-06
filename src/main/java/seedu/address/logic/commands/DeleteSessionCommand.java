@@ -79,8 +79,6 @@ public class DeleteSessionCommand extends Command {
             return new CommandResult(String.format(MESSAGE_CONFIRMATION, sessionDate, targetGroup));
         }
 
-        SessionCommandHistory.record(model, COMMAND_WORD + " d/" + sessionDate);
-
         int removedCount = 0;
         for (Person person : List.copyOf(model.getAddressBook().getPersonList())) {
             if (!person.hasGroup(targetGroup)) {

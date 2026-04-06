@@ -96,7 +96,6 @@ public class MarkCommand extends Command {
             throw new CommandException(MESSAGE_NO_ACTIVE_SESSION);
         }
         LocalDate targetDate = resolvedDate.get();
-        SessionCommandHistory.record(model, COMMAND_WORD + " i/" + targetIndex.getOneBased() + " d/" + targetDate);
 
         // Step 3: get person
         List<Person> lastShownList = model.getFilteredPersonList();
