@@ -203,6 +203,44 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Matriculation number validation
+
+The algorithm can be found [here](http://interrobeng.com/2014/01/19/nus-matriculation-number-check-digit-algorithm/).
+
+Format: Valid matriculation number has form of `A`, followed by 7 digits (_d1d2d3d4d5d6d7_) , and ending with a checksum letter.
+
+The checksum calculation is done by `MatricNumber#calculateChecksum(String matricNumber)`. <br>
+The checksum letter is one of the following 13 letters: `Y X W U R N M L J H E A B`.
+
+Step 1. Extract digits _d2d3d4d5d6d7_. <br>
+Step 2. Compute the sum of the 6 digits above.<br>
+Step 3. Map the remainder to a checksum letter by computing `r = s % 13`.
+
+|    r    | 0  | 1  |  2 |  3 |  4 |  5 |  6 |  7 |  8 | 9  | 10 | 11 | 12 |
+|:-------:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| Letter  | Y  | X  |  W |  U |  R |  N |  M |  L |  J | H  |  E |  A |  B |
+
+**Examples:**
+
+The table below shows one matric number that produces each of the 13 possible check letters.
+
+|  Matric number  | Digits d2–d7 | Digit sum | mod 13 | Check letter |
+|:---------------:|:------------:|:---------:|:------:|:------------:|
+|   `A0308002Y`   | 0,3,0,8,0,2  |    13     |   0    | Y            |
+|   `A0308003X`   | 0,3,0,8,0,3  |    14     |   1    | X            |
+|   `A0308004W`   | 0,3,0,8,0,4  |    15     |   2    | W            |
+|   `A0308005U`   | 0,3,0,8,0,5  |    16     |   3    | U            |
+|   `A0308006R`   | 0,3,0,8,0,6  |    17     |   4    | R            |
+|   `A0308007N`   | 0,3,0,8,0,7  |    18     |   5    | N            |
+|   `A0308008M`   | 0,3,0,8,0,8  |    19     |   6    | M            |
+|   `A0308009L`   | 0,3,0,8,0,9  |    20     |   7    | L            |
+|   `A0308019J`   | 0,3,0,8,1,9  |    21     |   8    | J            |
+|   `A0308029H`   | 0,3,0,8,2,9  |    22     |   9    | H            |
+|   `A0308039E`   | 0,3,0,8,3,9  |    23     |   10   | E            |
+|   `A0308000A`   | 0,3,0,8,0,0  |    11     |   11   | A            |
+|   `A0308001B`   | 0,3,0,8,0,1  |    12     |   12   | B            |
+
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
@@ -294,12 +332,6 @@ The following activity diagram summarizes what happens when a user executes a ne
   itself.
   * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
   * Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -439,7 +471,6 @@ The term `contacts` and `students` are used interchangeably in user stories and 
         Steps 1c1-1c2 are repeated until contact is no longer a duplicate.
 
         Use case resumes from step 1.
----
 
 **Use case: UC2 - Delete a contact**
 
@@ -464,8 +495,6 @@ The term `contacts` and `students` are used interchangeably in user stories and 
     * 3a2. User re-enters command with a valid index.
 
       Use case resumes at step 3.
-
----
 
 **Use case: UC3 - Edit a contact**
 
@@ -512,14 +541,12 @@ The term `contacts` and `students` are used interchangeably in user stories and 
 
         Use case resumes at step 3.
 
----
-
 **Use case: UC4 - Switch to a group view**
 
 **MSS**
 
 1.  User requests to switch to a group view.
-2.  AddressBook switches the active group view and shows a confirmation message.
+2.  TAA switches the active group view and shows a confirmation message.
 
     Use case ends.
 
@@ -527,53 +554,49 @@ The term `contacts` and `students` are used interchangeably in user stories and 
 
 * 1a. The group view identifier is missing or invalid.
 
-    * 1a1. AddressBook shows an error message.
+    * 1a1. TAA shows an error message.
 
-      Use case ends.
+        Use case ends.
 
 * 2a. The specified group view does not exist.
 
-    * 2a1. AddressBook shows an error message.
+    * 2a1. TAA shows an error message.
 
-      Use case ends.
-
----
+        Use case ends.
 
 **Use case: UC5 - Record class participation**
 
 **MSS**
 
-1.  User requests to list persons in the active class space.
-2.  AddressBook shows a list of persons.
+1.  User requests to list persons in the active group.
+2.  TAA shows a list of persons.
 3.  User requests to record participation for a specific person on a specified date.
-4.  AddressBook records the participation and shows a confirmation message.
+4.  TAA records the participation and shows a confirmation message.
 
     Use case ends.
 
 **Extensions**
 
-* 3b. The given date is invalid.
+* 3a. The given date is invalid.
 
-    * 3b1. AddressBook shows an error message.
+    * 3a1. TAA shows an error message.
 
-      Use case resumes at step 2.
+        Use case resumes at step 2.
 
 * 4a. A participation record already exists for that person on that date.
 
-    * 4a1. AddressBook shows a message indicating no change was made.
+    * 4a1. TAA shows a message indicating no change was made.
 
-      Use case ends.
-
----
+        Use case ends.
 
 **Use case: UC6 - Record assignment submission**
 
 **MSS**
 
-1.  User requests to list persons in the active class space.
-2.  AddressBook shows a list of persons.
+1.  User requests to list persons in the active group.
+2.  TAA shows a list of persons.
 3.  User requests to record an assignment submission for a specific person.
-4.  AddressBook records the submission and shows a confirmation message.
+4.  TAA records the submission and shows a confirmation message.
 
     Use case ends.
 
@@ -581,36 +604,34 @@ The term `contacts` and `students` are used interchangeably in user stories and 
 
 * 2a. The list is empty.
 
-  Use case ends.
+    Use case ends.
 
 * 3a. The given index is invalid.
 
-    * 3a1. AddressBook shows an error message.
+    * 3a1. TAA shows an error message.
 
-      Use case resumes at step 2.
+        Use case resumes at step 2.
 
 * 3b. The given assignment details are invalid (e.g., missing assignment name or status).
 
-    * 3b1. AddressBook shows an error message.
+    * 3b1. TAA shows an error message.
 
-      Use case resumes at step 2.
+        Use case resumes at step 2.
 
 * 4a. A submission record already exists for that assignment for that person.
 
-    * 4a1. AddressBook shows a message indicating no change was made.
+    * 4a1. TAA shows a message indicating no change was made.
 
-      Use case ends.
-
----
+        Use case ends.
 
 **Use case: UC7 - Mark attendance**
 
 **MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to mark attendance for a person in the list
-4.  AddressBook marks the attendance of that person
+1.  User requests to list persons.
+2.  TAA shows a list of persons.
+3.  User requests to mark attendance for a person in the list.
+4.  TAA marks the attendance of that person.
 
     Use case ends.
 
@@ -618,54 +639,55 @@ The term `contacts` and `students` are used interchangeably in user stories and 
 
 * 2a. The list is empty.
 
-  Use case ends.
+    Use case ends.
 
 * 3a. The given index is invalid.
 
-    * 3a1. AddressBook shows an error message.
+    * 3a1. TAA shows an error message.
 
-      Use case resumes at step 2.
+        Use case resumes at step 2.
 
 * 3b. The given tutorial group is invalid.
 
-    * 3a1. AddressBook shows an error message.
+    * 3a1. TAA shows an error message.
 
-      Use case resumes at step 2.
+        Use case resumes at step 2.
 
 **Use case: UC8 - Create a session for a group**  
 
 **MSS**
 1. User switches to a group.
-2. AddressBook shows the students in that group.
+2. TAA shows the students in that group.
 3. User requests to create a session for a specific date.
-4. AddressBook creates the session for the group and shows a confirmation message.
+4. TAA creates the session for the group and shows a confirmation message.
 
 **Extensions**
+
 * 1a. The group does not exist.
 
-  * 1a1. AddressBook shows an error message.
+    * 1a1. TAA shows an error message.
 
         Use case ends.
-
+  
 * 3a. The date is invalid.
 
-  * 3a1. AddressBook shows an error message.
-
-        Use case ends.
+    * 3a1. TAA shows an error message.
+    
+      Use case ends.
 
 * 3b. A session already exists on that date.
 
-  * 3b1. AddressBook shows an error message.
+    * 3b1. TAA shows an error message.
+        
+        Use case ends.
 
-        Use case ends.    
-
-**Use case: UC7 - View attendance matrix for a group**
+**Use case: UC9 - View attendance overview for a group**
 
 **MSS**
 1. User requests to switch to a tutorial group.
-2. AddressBook switches to the specified group view.
+2. TAA switches to the specified group view.
 3. User requests to view attendance for the group.
-4. AddressBook displays the attendance matrix for the students in the group.
+4. TAA displays the attendance overview for the students in the group.
 
    Use case ends.
 
@@ -673,25 +695,25 @@ The term `contacts` and `students` are used interchangeably in user stories and 
 
 * 1a. The specified group does not exist.
 
-    * 1a1. AddressBook shows an error message.
+    * 1a1. TAA shows an error message.
 
-      Use case ends.
+        Use case ends.
 
 * 3a. The group has no students.
 
-    * 3a1. AddressBook displays an empty attendance matrix or an appropriate empty-state message.
+    * 3a1. TAA displays an empty attendance overview.
 
-      Use case ends.
+        Use case ends.
 
 * 3b. The group has students but no recorded sessions.
 
-    * 3b1. AddressBook displays the attendance matrix without session columns, together with an appropriate empty-state message.
+    * 3b1. TAA displays the attendance overview without session columns.
 
-      Use case ends.
+        Use case ends.
 
-**Use case: UC8 - Export current view to CSV**
+**Use case: UC10 - Export current view to CSV**
 
-Preconditions: A group is currently active (via UC01).
+Preconditions: A group is currently active.
 
 MSS
 
@@ -706,13 +728,13 @@ Extensions
 
     * 1a1. TAA shows an error message.
 
-      Use case ends.
+        Use case ends.
 
 * 1b. The file cannot be written (e.g., invalid path or insufficient permissions).
 
     * 1b1. TAA shows an error message.
 
-      Use case ends.
+        Use case ends.
 ---
 
 ### Non-Functional Requirements
