@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
@@ -28,6 +29,12 @@ import seedu.address.model.tag.Tag;
 class JsonAdaptedPerson {
 
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Person's %s field is missing!";
+    public static final String LEGACY_FIELD_ATTENDANCE_MESSAGE =
+            "Legacy field 'attendance' is no longer supported at person level. "
+                    + "Move attendance into groupSessions.";
+    public static final String LEGACY_FIELD_PARTICIPATION_MESSAGE =
+            "Legacy field 'participation' is no longer supported at person level. "
+                    + "Move participation into groupSessions.";
 
 
     private final String name;
@@ -39,15 +46,20 @@ class JsonAdaptedPerson {
     private final Map<String, List<JsonAdaptedSession>> groupSessions = new HashMap<>();
     private final Map<String, Map<String, Integer>> assignmentGrades = new HashMap<>();
 
+    // TODO: Remove
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private final String attendance;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private final Integer participation;
+
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
      */
     @JsonCreator
-    public JsonAdaptedPerson(
-            @JsonProperty("name") String name,
-            @JsonProperty("phone") String phone,
-            @JsonProperty("email") String email,
-            @JsonProperty("matricNumber") String matricNumber,
+    public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
+            @JsonProperty("email") String email, @JsonProperty("matricNumber") String matricNumber,
+            @JsonProperty("attendance") String attendance,
+            @JsonProperty("participation") Integer participation,
             @JsonProperty("tags") List<JsonAdaptedTag> tags,
             @JsonProperty("groups") List<String> groups,
             @JsonProperty("groupSessions") Map<String, List<JsonAdaptedSession>> groupSessions,
@@ -56,6 +68,8 @@ class JsonAdaptedPerson {
         this.phone = phone;
         this.email = email;
         this.matricNumber = matricNumber;
+        this.attendance = attendance;
+        this.participation = participation;
         if (tags != null) {
             this.tags.addAll(tags);
         }
@@ -78,8 +92,18 @@ class JsonAdaptedPerson {
         }
     }
 
-    public JsonAdaptedPerson(String name, String phone, String email, String matricNumber, List<JsonAdaptedTag> tags) {
-        this(name, phone, email, matricNumber, tags, null, null, null);
+    public JsonAdaptedPerson(String name, String phone, String email, String matricNumber,
+                             String attendance, Integer participation,
+                             List<JsonAdaptedTag> tags, List<String> groups,
+                             Map<String, List<JsonAdaptedSession>> groupSessions) {
+        this(name, phone, email, matricNumber, attendance, participation,
+                tags, groups, groupSessions, null);
+    }
+
+    public JsonAdaptedPerson(String name, String phone, String email, String matricNumber,
+                             List<JsonAdaptedTag> tags) {
+        this(name, phone, email, matricNumber, null,
+                null, tags, null, null, null);
     }
 
     /**
@@ -90,6 +114,10 @@ class JsonAdaptedPerson {
         phone = source.getPhoneValue();
         email = source.getEmailValue();
         matricNumber = source.getMatricNumberValue();
+
+        attendance = null; // TODO: Remove
+        participation = null; // TODO: Remove
+
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .toList());
@@ -117,6 +145,14 @@ class JsonAdaptedPerson {
      */
     public Person toModelType() throws IllegalValueException {
         final List<String> validationErrors = new ArrayList<>();
+
+        if (attendance != null) {
+            validationErrors.add(LEGACY_FIELD_ATTENDANCE_MESSAGE); // TODO: Remove
+        }
+
+        if (participation != null) {
+            validationErrors.add(LEGACY_FIELD_PARTICIPATION_MESSAGE); // TODO: Remove
+        }
 
         if (name == null) {
             validationErrors.add(String.format(MISSING_FIELD_MESSAGE_FORMAT, Name.class.getSimpleName()));

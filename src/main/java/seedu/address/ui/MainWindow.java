@@ -168,8 +168,7 @@ public class MainWindow extends UiPart<Stage> {
         // Make commandBox and resultDisplay not resize when resizing app window:
         SplitPane.setResizableWithParent(commandBoxPlaceholder, false);
         SplitPane.setResizableWithParent(resultDisplayPlaceholder, false);
-        SplitPane.setResizableWithParent(personListPanelPlaceholder, true);
-        // exclude personListPanelPlaceholder so that it absorbs window resizes
+        SplitPane.setResizableWithParent(personListPanelPlaceholder, true); // make it absorb window resizes
 
         // Calculate startup heights of the 2 resizeable placeholders (commandBox, resultDisplay):
         Platform.runLater(() -> {
