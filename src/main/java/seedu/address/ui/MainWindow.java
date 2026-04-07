@@ -5,12 +5,15 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
@@ -28,6 +31,9 @@ public class MainWindow extends UiPart<Stage> {
     private static final String FXML = "MainWindow.fxml";
     private static final double COMMANDBOX_STARTUP_HEIGHT_PX = 45.0;
     private static final double RESULTDISPLAY_STARTUP_HEIGHT_PX = 170.0;
+
+    /** Fraction of screen size used when the saved/default size is too large. */
+    private static final double SCREEN_FIT_RATIO = 0.9;
 
     private final Logger logger = LogsCenter.getLogger(getClass());
 
@@ -68,7 +74,8 @@ public class MainWindow extends UiPart<Stage> {
         this.primaryStage = primaryStage;
         this.logic = logic;
 
-        // Configure the UI
+        // UiPart loads MainWindow.fxml during super(), so the Stage already has
+        // the minWidth/minHeight declared in FXML when we size it here.
         setWindowDefaultSize(logic.getGuiSettings());
 
         setAccelerators();
@@ -149,7 +156,8 @@ public class MainWindow extends UiPart<Stage> {
         );
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
 
-        personListPanel = new PersonListPanel(logic.getFilteredPersonList(),
+        personListPanel = new PersonListPanel(
+                logic.getFilteredPersonList(),
                 logic.getAddressBook().getPersonList(),
                 logic.getAddressBook().getGroupList(),
                 logic.attendanceViewActiveProperty(),
@@ -187,15 +195,53 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-     * Sets the default size based on {@code guiSettings}.
+     * Sets the default size based on {@code guiSettings}, clamping to 90 % of the
+     * relevant screen's visual bounds when the requested size would overflow it.
+     * If even 90 % of the screen is smaller than the application's minimum window
+     * size, an error dialog is shown via {@code Platform.runLater} after startup.
      */
     private void setWindowDefaultSize(GuiSettings guiSettings) {
-        primaryStage.setHeight(guiSettings.getWindowHeight());
-        primaryStage.setWidth(guiSettings.getWindowWidth());
+        double requestedWidth = guiSettings.getWindowWidth();
+        double requestedHeight = guiSettings.getWindowHeight();
+        double minimumWidth = getMinimumWindowWidth();
+        double minimumHeight = getMinimumWindowHeight();
+
+        Rectangle2D screenBounds = getScreenBoundsForWindow(guiSettings);
+
+        double effectiveWidth = requestedWidth;
+        double effectiveHeight = requestedHeight;
+
+        if (requestedWidth > screenBounds.getWidth() || requestedHeight > screenBounds.getHeight()) {
+            double targetWidth = screenBounds.getWidth() * SCREEN_FIT_RATIO;
+            double targetHeight = screenBounds.getHeight() * SCREEN_FIT_RATIO;
+
+            if (targetWidth < minimumWidth || targetHeight < minimumHeight) {
+                // 90 % of the screen is still smaller than the minimum window size.
+                logger.warning(String.format(
+                        "Screen resolution (%.0f x %.0f) is too small for the minimum window size (%.0f x %.0f).",
+                        screenBounds.getWidth(), screenBounds.getHeight(), minimumWidth, minimumHeight));
+                // Show the error dialog once the stage is visible.
+                final Rectangle2D bounds = screenBounds;
+                Platform.runLater(() -> showScreenTooSmallError(bounds));
+            } else {
+                effectiveWidth = targetWidth;
+                effectiveHeight = targetHeight;
+                logger.warning(String.format(
+                        "Window size (%.0f x %.0f) exceeds screen bounds (%.0f x %.0f). "
+                                + "Resizing to %.0f%% of screen: %.0f x %.0f.",
+                        requestedWidth, requestedHeight,
+                        screenBounds.getWidth(), screenBounds.getHeight(),
+                        SCREEN_FIT_RATIO * 100, effectiveWidth, effectiveHeight));
+            }
+        }
+
+        primaryStage.setWidth(effectiveWidth);
+        primaryStage.setHeight(effectiveHeight);
+
         if (guiSettings.getWindowCoordinates() != null) {
             int x = (int) guiSettings.getWindowCoordinates().getX();
             int y = (int) guiSettings.getWindowCoordinates().getY();
-            if (isWithinScreenBounds(x, y, guiSettings.getWindowWidth(), guiSettings.getWindowHeight())) {
+            if (isWithinScreenBounds(x, y)) {
                 primaryStage.setX(x);
                 primaryStage.setY(y);
             }
@@ -203,11 +249,67 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-     * Returns true if the given app window position/size is in the screen's visual bounds.
+     * Returns the minimum window width defined by MainWindow.fxml.
      */
-    private boolean isWithinScreenBounds(int x, int y, double width, double height) {
-        for (javafx.stage.Screen screen : javafx.stage.Screen.getScreens()) {
-            javafx.geometry.Rectangle2D bounds = screen.getVisualBounds();
+    private double getMinimumWindowWidth() {
+        return primaryStage.getMinWidth();
+    }
+
+    /**
+     * Returns the minimum window height defined by MainWindow.fxml.
+     */
+    private double getMinimumWindowHeight() {
+        return primaryStage.getMinHeight();
+    }
+
+    /**
+     * Returns the visual bounds of the screen that the window should open on.
+     * Uses the screen containing the saved window coordinates when available;
+     * falls back to the primary screen otherwise.
+     */
+    private Rectangle2D getScreenBoundsForWindow(GuiSettings guiSettings) {
+        if (guiSettings.getWindowCoordinates() != null) {
+            int x = (int) guiSettings.getWindowCoordinates().getX();
+            int y = (int) guiSettings.getWindowCoordinates().getY();
+            for (Screen screen : Screen.getScreens()) {
+                if (screen.getVisualBounds().contains(x, y)) {
+                    return screen.getVisualBounds();
+                }
+            }
+        }
+        return Screen.getPrimary().getVisualBounds();
+    }
+
+    /**
+     * Shows an error dialog informing the user that their monitor resolution is
+     * too small for the application's minimum window size.
+     *
+     * @param screenBounds Visual bounds of the screen the window would open on.
+     */
+    private void showScreenTooSmallError(Rectangle2D screenBounds) {
+        double minimumWidth = getMinimumWindowWidth();
+        double minimumHeight = getMinimumWindowHeight();
+
+        final Alert.AlertType alertType = Alert.AlertType.ERROR;
+        final Stage owner = getPrimaryStage();
+        final String title = "Screen Resolution Too Small";
+        final String header = "Monitor resolution is too small";
+        final String content = String.format(
+                "Your screen resolution (%.0f x %.0f) is too small to display the application"
+                        + " within its minimum required size (%.0f x %.0f pixels).%n%n"
+                        + "The application will still open, but parts of the window may be off-screen.",
+                screenBounds.getWidth(), screenBounds.getHeight(),
+                minimumWidth, minimumHeight);
+
+        UiManager.showAlertDialogAndWait(owner, alertType, title, header, content);
+    }
+
+    /**
+     * Returns true if the given app window position is in the screen's visual bounds.
+     */
+    private boolean isWithinScreenBounds(int x, int y) {
+        for (Screen screen : Screen.getScreens()) {
+            Rectangle2D bounds = screen.getVisualBounds();
             // Require that at least the top-left corner is within this screen
             if (bounds.contains(x, y)) {
                 return true;
