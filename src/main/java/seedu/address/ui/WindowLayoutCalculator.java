@@ -8,8 +8,8 @@ import java.util.List;
  */
 public class WindowLayoutCalculator {
 
-    /** Fraction of the screen used when the saved size is larger than the screen. */
-    static final double SCREEN_FIT_RATIO = 0.9;
+    /** Fraction of the screen to be used when the saved size is larger than the screen. */
+    public static final double SCREEN_FIT_RATIO = 0.9;
 
     private WindowLayoutCalculator() {} // utility class
 

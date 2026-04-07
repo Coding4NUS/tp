@@ -2,7 +2,6 @@ package seedu.address.ui;
 
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -33,9 +32,6 @@ public class MainWindow extends UiPart<Stage> {
     private static final String FXML = "MainWindow.fxml";
     private static final double COMMANDBOX_STARTUP_HEIGHT_PX = 45.0;
     private static final double RESULTDISPLAY_STARTUP_HEIGHT_PX = 170.0;
-
-    /** Fraction of screen size used when the saved/default size is too large. */
-    private static final double SCREEN_FIT_RATIO = WindowLayoutCalculator.SCREEN_FIT_RATIO;
 
     private final Logger logger = LogsCenter.getLogger(getClass());
 
@@ -221,28 +217,37 @@ public class MainWindow extends UiPart<Stage> {
                 screenBounds.getWidth(), screenBounds.getHeight());
 
         if (effective.width() != requestedWidth || effective.height() != requestedHeight) {
-            logger.warning(String.format(
-                    "Window size (%.0f x %.0f) exceeds screen bounds (%.0f x %.0f). "
-                            + "Resizing to %.0f%% of screen: %.0f x %.0f.",
-                    requestedWidth, requestedHeight,
-                    screenBounds.getWidth(), screenBounds.getHeight(),
-                    SCREEN_FIT_RATIO * 100, effective.width(), effective.height())
-            );
-
-            final double minimumWidth = getMinimumWindowWidth();
-            final double minimumHeight = getMinimumWindowHeight();
-
-            if (effective.width() < minimumWidth || effective.height() < minimumHeight) {
-                Platform.runLater(() -> showScreenTooSmallError(screenBounds));
-
-                logger.warning(String.format(
-                        "Screen resolution (%.0f x %.0f) is too small for the minimum window size (%.0f x %.0f).",
-                        screenBounds.getWidth(), screenBounds.getHeight(), minimumWidth, minimumHeight)
-                );
-            }
+            handleOversizedWindow(requestedWidth, requestedHeight, effective, screenBounds);
         }
 
         return effective;
+    }
+
+    /**
+     * Logs a warning when the window has been clamped to fit the screen, and
+     * schedules an error dialog if even the clamped size is below the minimum.
+     */
+    private void handleOversizedWindow(double requestedWidth, double requestedHeight,
+            WindowLayoutCalculator.Size effective, Rectangle2D screenBounds) {
+        logger.warning(String.format(
+                "Window size (%.0f x %.0f) exceeds screen bounds (%.0f x %.0f). "
+                        + "Resizing to %.0f%% of screen: %.0f x %.0f.",
+                requestedWidth, requestedHeight,
+                screenBounds.getWidth(), screenBounds.getHeight(),
+                WindowLayoutCalculator.SCREEN_FIT_RATIO * 100, effective.width(), effective.height())
+        );
+
+        final double minimumWidth = getMinimumWindowWidth();
+        final double minimumHeight = getMinimumWindowHeight();
+
+        if (effective.width() < minimumWidth || effective.height() < minimumHeight) {
+            Platform.runLater(() -> showScreenTooSmallError(screenBounds));
+
+            logger.warning(String.format(
+                    "Screen resolution (%.0f x %.0f) is too small for the minimum window size (%.0f x %.0f).",
+                    screenBounds.getWidth(), screenBounds.getHeight(), minimumWidth, minimumHeight)
+            );
+        }
     }
 
     private void setWindowSize(WindowLayoutCalculator.Size effectiveWindowSize) {
@@ -321,13 +326,15 @@ public class MainWindow extends UiPart<Stage> {
      * Returns true if the given app window position is in the screen's visual bounds.
      */
     private boolean isWithinScreenBounds(int x, int y) {
-        // Require that at least the top-left corner is within this screen
         List<WindowLayoutCalculator.ScreenBounds> bounds = Screen.getScreens().stream()
-                .map(s -> new WindowLayoutCalculator.ScreenBounds(
-                        s.getVisualBounds().getMinX(), s.getVisualBounds().getMinY(),
-                        s.getVisualBounds().getWidth(), s.getVisualBounds().getHeight()))
-                .collect(Collectors.toList());
+                .map(MainWindow::toScreenBounds)
+                .toList();
         return WindowLayoutCalculator.isWithinAnyBounds(x, y, bounds);
+    }
+
+    private static WindowLayoutCalculator.ScreenBounds toScreenBounds(Screen screen) {
+        Rectangle2D b = screen.getVisualBounds();
+        return new WindowLayoutCalculator.ScreenBounds(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
     }
 
     /**
