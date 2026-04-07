@@ -56,18 +56,13 @@ public class Messages {
     public static String format(Person person, GroupName groupName, LocalDate date) {
         final StringBuilder builder = new StringBuilder();
         builder.append(person.getName())
-                .append("; Attendance: ")
-                .append(person.getAttendance(groupName, date))
-                .append("; Participation: ")
-                .append(person.getParticipation(groupName, date))
-                .append("; Phone: ")
-                .append(person.getPhone())
-                .append("; Email: ")
-                .append(person.getEmail())
-                .append("; Matric Number: ")
+                .append("\nMatric Number: ")
                 .append(person.getMatricNumber())
-                .append("; Tags: ");
-        return getString(person, builder);
+                .append("\nAttendance: ")
+                .append(person.getAttendance(groupName, date))
+                .append("\nParticipation: ")
+                .append(person.getParticipation(groupName, date));
+        return builder.toString();
     }
 
     private static String getString(Person person, StringBuilder builder) {
