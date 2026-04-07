@@ -6,7 +6,13 @@ pageNav: 3
 
 # TAA User Guide
 
-Teacher Assistant's Assistant (TAA) is a **desktop app for Manage all student-related TA matters onto one platform via a Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, TAA can get your contact management tasks done faster than traditional GUI apps.
+Are you a NUS Teaching Assistant (TA) struggling to **keep track of your student's data** between spreadsheets and different apps? 
+<br>Are you a TA that prefers **typing commands** over clicking through menus?
+
+Look no further! Teacher Assistant's Assistant (TAA) is a **desktop app that consolidates all your student management needs in one place**. 
+It leverages the speed of fast typists while maintaining a clean visual display, so you can manage student contacts and track assignments, participation, and attendance — all without leaving your keyboard!
+
+Spend less time organizing data and more time focusing on what matters most: **teaching**.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -15,31 +21,77 @@ Teacher Assistant's Assistant (TAA) is a **desktop app for Manage all student-re
 
 ## Quick start
 
-1. Ensure you have Java `17` or above installed in your Computer.<br>
-   **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+1. Ensure you have **Java 17** or above installed on your computer.<br>
 
-2. Download the latest `.jar` file from [here](https://github.com/AY2526S2-CS2103T-F14-1/tp/releases/latest).
+   * You can refer to [this guide](https://se-education.org/guides/tutorials/javaInstallation.html) on how to install **Java 17**.
+   * If you know how set up your Java version, you can download Java from [here](https://learn.microsoft.com/en-my/java/openjdk/download).
 
-3. Copy the file to the folder you want to use as the _home folder_ for your AddressBook.
+<box type="info" seamless>
 
-4. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
+**Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+
+</box>
+
+2. Download the latest release of `TAA.jar` from [here](https://github.com/AY2526S2-CS2103T-F14-1/tp/releases/latest).
+
+3. Move the file to a folder you want to use as the _home folder_ for TAA.
+
+4. Open a command terminal and launch TAA by following these instructions:
+
+<panel header="Launching TAA on **Windows**" type=seamless expanded>
+
+Open **Terminal** and run:
+
+```
+cd "PATH_TO_FOLDER_WITH_JAR_FILE"
+java -jar TAA.jar
+```
+
+Example: if you placed `TAA.jar` in a folder named **TAA** in your **Downloads** folder, you will run:
+
+```
+cd "C:\Users\USERNAME\Downloads\TAA"
+java -jar TAA.jar
+```
+</panel>
+
+<panel header="Launching TAA on **MacOS or Linux**" type=seamless expanded>
+
+Open **Terminal** and run:
+
+```
+cd "PATH_TO_FOLDER_WITH_JAR_FILE" && java -jar TAA.jar
+```
+
+Example: if you placed `TAA.jar` in a folder named **TAA** in your **Downloads** folder, you will run:
+
+```
+cd ~/Downloads/TAA && java -jar TAA.jar
+```
+
+</panel>
+
+   TAA will start up. Note how the app contains some sample data.<br>
+
    ![Ui](images/Ui.png)
 
-5. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
-   Some example commands you can try:
+5. Type the command in the command box and press Enter to execute it. e.g. typing `help` and pressing Enter will open the help window.<br>
+   
+    Some example commands you can try:
 
-   * `list` : Lists all contacts in the current view.
+   * `list` : Lists all contacts in the current view (The default current view is **All students**).
+   
+   * `add n/John Doe p/98765432 e/johnd@example.com m/A1234567X` : Adds a contact named `John Doe` to TAA.
+   * `switchgroup g/T02` : Switches the current view to show group `T02`
+   * `view g/T02` : Switches to a calendar view to show participation and attendance for contacts in `T02`.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com m/A1234567X t/friends t/owesMoney` : Adds a contact named `John Doe` to the Address Book.
-
-   * `delete i/3` : Deletes the 3rd contact shown in the current list.
+   * `delete i/3` : Deletes the 3rd contact shown in the current list, if it exists.
 
    * `clear` : Deletes all contacts.
 
    * `exit` : Exits the app.
 
-6. Refer to the [Features](#features) below for details of each command.
+6. Refer to the [Features](#features) below for details of each command, or the [Command summary](#command-summary) for a quick summary of all commands.
 
 **Related FAQs:**
 * [What happens when I launch TAA for the first time?](#faq-first_time)
@@ -58,8 +110,8 @@ Teacher Assistant's Assistant (TAA) is a **desktop app for Manage all student-re
 * Items in square brackets are optional.<br>
   e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
 
-* Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+* Items with `…`​ after them can be used multiple times including 0 times.<br>
+  e.g. `[t/TAG]…​` can be used as `t/friend`, `t/friend t/family` etc.
 
 * Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE`, `p/PHONE n/NAME` is also acceptable.
@@ -473,7 +525,7 @@ You do not need to save any changes manually.
 You are welcome to update data directly by editing the `TAA_savefile.json` data file. 
 We recommend that you back up your data before beginning.
 
-You can edit the data file using pre-installed apps found on your computer:
+You can edit the data file using pre-installed text editors found on your computer:
 * **Windows:** Notepad
 * **MacOS:** TextEdit
 * **Linux:** gedit
@@ -885,16 +937,16 @@ You can remove all tags from a contact by running `edit i/INDEX t/`, without spe
 You should refer to this section to find out more about some common errors faced when manually editing the data file.
 
 #### Troubleshooting manual editing of persons
-| Problem                                                              | Error shown                                                                              | How to fix                                                                                                              |
-|:---------------------------------------------------------------------|:-----------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------|
-| Invalid or blank name                                                | TODO                                                                                     | Ensure that `Name` follows the constraints given in the error message                                                   |
-| Invalid or blank phone                                               | TODO                                                                                     | Ensure that `Phone` follows the constraints given in the error message                                                  |
-| Invalid or blank matriculation number                                | TODO                                                                                     | Ensure that `matricNumber` follows the constraints given in the error message.                                          |
-| Invalid matriculation number number checksum                         | TODO                                                                                     | Change the `matricNumber` checksum to the correct one as given in the error message.                                    |
-| Person has grades for a group they are not part of                   | `Person has grades for group 'X' but is not a member of it`                              | Add the respective group into `"groups": [ ]` for that person under `"persons": [ ]`.                                   |
-| Person has grades for an assignment that does not exist in the group | `Person has a grade for assignment 'X' in group 'Y', but that assignment does not exist` | Add the assignment into `"groups": [ ]`.<br> This is not the same `"groups": [ ]` as the one found in `"persons": [ ]`. |
-| Person has grades for an assignment that exceeds the max marks       | `Grade 'A' for assignment 'X' in group 'Y' exceeds max marks of 'B'`                     | Ensure that grade is below max marks for the assignment.                                                                |
-| Person has session for a group they are not a part of                | `Person has sessions for group 'X' but is not a member of it`                            | Ensure that person has matching groups in `"groups": [ ]` and `"groupSessions": { }` in `"persons": [ ]`.               |
+| Problem                                                              | Error shown                                                                                                                      | How to fix                                                                                                                                        |
+|:---------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------|
+| Invalid or blank name                                                | `Name cannot be blank, must be at most 300 characters long and characters like semicolons and <> are invalid.`                   | Ensure that `Name` follows the constraints given in the error message. <br>You can also refer to [this FAQ](#faq-add_edit_valid_formats).         |
+| Invalid or blank phone                                               | `Phone numbers should not be blank, should only contain numbers, and should be at least 3 digits long`                           | Ensure that `Phone` follows the constraints given in the error message. <br>You can also refer to [this FAQ](#faq-add_edit_valid_formats).        |
+| Invalid or blank matriculation number                                | `Matriculation number should not be blank and should start with 'A', followed by 7 digits and end with a valid checksum letter.` | Ensure that `matricNumber` follows the constraints given in the error message. <br>You can also refer to [this FAQ](#faq-add_edit_valid_formats). |
+| Invalid matriculation number number checksum                         | `The matriculation number checksum letter is incorrect. For the given digits, it should be 'X'.`                                 | Change the last character of the `matricNumber` (checksum) to the correct one as given in the error message.                                      |
+| Person has grades for a group they are not part of                   | `Person has grades for group 'X' but is not a member of it`                                                                      | Add the respective group into `"groups": [ ]` for that person under `"persons": [ ]`.                                                             |
+| Person has grades for an assignment that does not exist in the group | `Person has a grade for assignment 'X' in group 'Y', but that assignment does not exist`                                         | Add the assignment into `"groups": [ ]`.<br> This is not the same `"groups": [ ]` as the one found in `"persons": [ ]`.                           |
+| Person has grades for an assignment that exceeds the max marks       | `Grade 'A' for assignment 'X' in group 'Y' exceeds max marks of 'B'`                                                             | Ensure that grade is below max marks for the assignment.                                                                                          |
+| Person has session for a group they are not a part of                | `Person has sessions for group 'X' but is not a member of it`                                                                    | Ensure that person has matching groups in `"groups": [ ]` and `"groupSessions": { }` in `"persons": [ ]`.                                         |
 
 ### Troubleshooting manual editing of groups
 | Problem                               | Error shown                                                                                                      | How to fix                                                                                                                     |
