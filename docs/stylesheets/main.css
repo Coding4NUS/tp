@@ -159,6 +159,13 @@ mark {
   img {
       zoom: 0.7;  /* might not work on some browsers */
   }
+
+  /* Reduce line height in the printed table of contents */
+  .page-nav-print a.nav-link {
+      padding-top: 1px !important;
+      padding-bottom: 1px !important;
+      line-height: 1.5;
+  }
 }
 
 h2,
@@ -166,7 +173,8 @@ h3,
 h4,
 h5,
 h6 {
-  color: #e46c0a;
+  /*color: #e46c0a;*/
+    color: rgb(50, 110, 210);
 }
 
 img[src*=".png"] {

@@ -11,6 +11,8 @@ pageNav: 3
 
 --------------------------------------------------------------------------------------------------------------------
 
+<div style="page-break-after: always;"></div>
+
 ## **Acknowledgements**
 
 * The algorithm used to calculate the matric number checksum was posted by Beng Hee Eu. It can be found [here](http://interrobeng.com/2014/01/19/nus-matriculation-number-check-digit-algorithm/). Our implementation was made based on his algorithm.
@@ -23,8 +25,6 @@ pageNav: 3
 Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 --------------------------------------------------------------------------------------------------------------------
-
-<div style="page-break-after: always;"></div>
 
 ## **Design**
 
@@ -241,6 +241,7 @@ The table below shows one matric number that produces each of the 13 possible ch
 |   `A0308000A`   | 0,3,0,8,0,0  |    11     |   11   | A            |
 |   `A0308001B`   | 0,3,0,8,0,1  |    12     |   12   | B            |
 
+<div style="page-break-after: always;"></div>
 
 ### Command Tab Completion Feature
 
@@ -309,6 +310,8 @@ The architecture works as follows:
     * Pros: More forgiving; better user experience for typos
     * Cons: More complex; slower for large command sets; may suggest unintended commands
 
+<div style="page-break-after: always;"></div>
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
@@ -373,8 +376,6 @@ The `redo` command does the opposite — it calls `Model#redoAddressBook()`,
 **Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
 
 </box>
-
-<div style="page-break-after: always;"></div>
 
 Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
 
@@ -1447,6 +1448,8 @@ Back up the file before each test if you intend to continue using the existing d
       * A load warning is displayed. 
       * Other contacts load normally.
 
+<div style="page-break-after: always;"></div>
+
 ## Appendix: Effort
 
 ### Difficulties & Challenges
@@ -1464,6 +1467,8 @@ The project required substantial effort in both feature development and adaptati
 The team also improved robustness by validating saved data during loading, preserving skipped invalid entries, and surfacing warnings to the user instead of failing silently. On the UI side, the app was adapted to support attendance-oriented views and clearer group/session context.
 
 Overall, our team successfully transformed a generic contact-management application into a more task-focused teaching assistant management tool while preserving the strengths of the original CLI-based workflow.
+
+<div style="page-break-after: always;"></div>
 
 ## Appendix: Planned Enhancements
 

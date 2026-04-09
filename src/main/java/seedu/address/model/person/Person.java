@@ -34,8 +34,11 @@ public class Person {
     private final Set<GroupName> groups = new HashSet<>();
 
     // Session fields (stored per group)
+    //@@author Sinnez1
     private final Map<GroupName, SessionList> groupSessions = new HashMap<>();
+    //@@author ongrussell
     private final Map<GroupName, Map<AssignmentName, Integer>> assignmentGrades = new HashMap<>();
+    //@@author
 
     /**
      * Used for AddCommand. Every field must be present and not null.

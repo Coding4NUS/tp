@@ -36,7 +36,7 @@ import seedu.address.model.tag.Tag;
  */
 public class ParserUtil {
 
-    public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
+    public static final String MESSAGE_INVALID_INDEX = "Index must be made up of a positive integer.";
     public static final String MESSAGE_INVALID_INDEX_EXPRESSION = "Index expression must be made up of positive "
             + "integers, comma-separated integers, or ranges like 1-3.";
 
