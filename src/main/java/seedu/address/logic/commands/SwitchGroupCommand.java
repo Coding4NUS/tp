@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.group.Group;
 import seedu.address.model.group.GroupName;
 
 /**
@@ -29,32 +30,34 @@ public class SwitchGroupCommand extends Command {
     public static final String MESSAGE_SWITCHED_TO_GROUP = "Switched to group: %1$s";
     public static final String MESSAGE_GROUP_NOT_FOUND = "This group does not exist.";
 
-    private final Optional<GroupName> groupName;
+    /** The group to switch to, or {@code null} to switch to the all-students view. */
+    private final GroupName requestedGroupName;
 
     public SwitchGroupCommand() {
-        this.groupName = Optional.empty();
+        this.requestedGroupName = null;
     }
 
-    public SwitchGroupCommand(GroupName groupName) {
-        this.groupName = Optional.of(groupName);
+    public SwitchGroupCommand(GroupName requestedGroupName) {
+        this.requestedGroupName = requestedGroupName;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         model.setAttendanceViewActive(false);
-        if (groupName.isEmpty()) {
+        if (requestedGroupName == null) {
             model.switchToAllStudentsView();
             return new CommandResult(MESSAGE_SWITCHED_TO_ALL);
         }
 
-        GroupName targetName = groupName.get();
-        if (model.findGroupByName(targetName).isEmpty()) {
+        Optional<Group> foundGroup = model.findGroupByName(requestedGroupName);
+        if (foundGroup.isEmpty()) {
             throw new CommandException(MESSAGE_GROUP_NOT_FOUND);
         }
 
-        model.switchToGroupView(targetName);
-        return new CommandResult(String.format(MESSAGE_SWITCHED_TO_GROUP, targetName.value));
+        GroupName foundGroupCanonicalName = foundGroup.get().getGroupName();
+        model.switchToGroupView(foundGroupCanonicalName);
+        return new CommandResult(String.format(MESSAGE_SWITCHED_TO_GROUP, foundGroupCanonicalName.value));
     }
 
     @Override
@@ -66,7 +69,7 @@ public class SwitchGroupCommand extends Command {
             return false;
         }
         SwitchGroupCommand otherCommand = (SwitchGroupCommand) other;
-        return Objects.equals(groupName, otherCommand.groupName);
+        return Objects.equals(requestedGroupName, otherCommand.requestedGroupName);
     }
 }
 // @@author

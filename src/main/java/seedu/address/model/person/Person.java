@@ -443,6 +443,7 @@ public class Person {
                 .toString();
     }
 
+    //@@author ongrussell
     private static Map<GroupName, SessionList> copySessionMap(Map<GroupName, SessionList> source) {
         Map<GroupName, SessionList> copiedMap = new HashMap<>();
         source.forEach((groupName, sessionList) ->
@@ -457,6 +458,7 @@ public class Person {
                 copiedMap.put(groupName, new HashMap<>(assignmentGradeMap)));
         return copiedMap;
     }
+    //@@author
 
     /**
      * Returns the Name of Person as a String.

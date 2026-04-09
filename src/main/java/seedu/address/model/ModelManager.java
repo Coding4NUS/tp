@@ -155,6 +155,7 @@ public class ModelManager implements Model {
         refreshFilteredPersonList();
     }
 
+    //@@author ongrussell
     @Override
     public boolean hasGroup(Group group) {
         requireNonNull(group);
@@ -201,6 +202,7 @@ public class ModelManager implements Model {
     public ObservableList<Group> getGroupList() {
         return addressBook.getGroupList();
     }
+    //@@author
 
     //=========== Filtered Person List Accessors =============================================================
 
@@ -366,8 +368,8 @@ public class ModelManager implements Model {
                 && currentView.get().equals(otherModelManager.currentView.get())
                 && attendanceViewActive.get() == otherModelManager.attendanceViewActive.get()
                 && Optional.ofNullable(activeGroupName.get()).equals(
-                Optional.ofNullable(otherModelManager.activeGroupName.get()))
+                        Optional.ofNullable(otherModelManager.activeGroupName.get()))
                 && Optional.ofNullable(activeSessionDate.get()).equals(
-                Optional.ofNullable(otherModelManager.activeSessionDate.get()));
+                        Optional.ofNullable(otherModelManager.activeSessionDate.get()));
     }
 }

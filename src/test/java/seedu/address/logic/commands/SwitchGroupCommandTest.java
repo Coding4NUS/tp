@@ -19,6 +19,7 @@ public class SwitchGroupCommandTest {
 
     @Test
     public void execute_switchToAllStudentsView_success() {
+        // EP: requestedGroupName is null (user typed "switchgroup all") -> switches to all-students view
         Model model = new ModelManager();
         model.addGroup(new Group(T01));
         model.switchToGroupView(T01);
@@ -36,6 +37,7 @@ public class SwitchGroupCommandTest {
 
     @Test
     public void execute_switchToExistingGroup_success() {
+        // EP: input group name matches an existing group with exact case -> success, message shows that name
         Model model = new ModelManager();
         model.addGroup(new Group(T01));
         model.addGroup(new Group(T02));
@@ -51,7 +53,27 @@ public class SwitchGroupCommandTest {
     }
 
     @Test
+    public void execute_switchToExistingGroupWithWrongCase_usesCanonicalName() {
+        // EP: input group name that matches an existing group case-insensitively but not exactly
+        // (distinct partition from execute_switchToExistingGroup_success, which uses exact-case input)
+        // Both the result message and the model state should reflect the canonical stored name, not the user's input.
+        GroupName canonicalT02 = new GroupName("T02");
+        GroupName lowercaseT02 = new GroupName("t02");
+
+        Model model = new ModelManager();
+        model.addGroup(new Group(canonicalT02));
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.setAttendanceViewActive(false);
+        expectedModel.switchToGroupView(canonicalT02);
+
+        assertCommandSuccess(new SwitchGroupCommand(lowercaseT02), model,
+                String.format(SwitchGroupCommand.MESSAGE_SWITCHED_TO_GROUP, canonicalT02.value), expectedModel);
+    }
+
+    @Test
     public void execute_missingGroup_failure() {
+        // EP: input group name does not match any existing group -> failure with group-not-found message
         Model model = new ModelManager();
 
         assertCommandFailure(new SwitchGroupCommand(T01), model, SwitchGroupCommand.MESSAGE_GROUP_NOT_FOUND);
@@ -59,6 +81,8 @@ public class SwitchGroupCommandTest {
 
     @Test
     public void equals() {
+        // EP: same requestedGroupName (both null), same requestedGroupName (same group),
+        //     different requestedGroupName (null vs group, group vs group), null argument
         SwitchGroupCommand switchAllCommand = new SwitchGroupCommand();
         SwitchGroupCommand switchT01Command = new SwitchGroupCommand(T01);
         SwitchGroupCommand switchT02Command = new SwitchGroupCommand(T02);
