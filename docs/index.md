@@ -8,7 +8,9 @@
 [![CI Status](https://github.com/se-edu/addressbook-level3/workflows/Java%20CI/badge.svg)](https://github.com/se-edu/addressbook-level3/actions)
 [![codecov](https://codecov.io/gh/AY2526S2-CS2103T-F14-1/tp/graph/badge.svg?token=FUZ1YJQVJG)](https://codecov.io/gh/AY2526S2-CS2103T-F14-1/tp)
 
-![Ui](images/Ui.png)
+<img src="images/Ui.png" alt="Ui" width="800">
+
+<p> </p>
 
 **TAA is a desktop application for managing your contact details.** While it has a GUI, most of the user interactions happen using a CLI (Command Line Interface).
 
