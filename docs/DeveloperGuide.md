@@ -522,7 +522,7 @@ The term `contacts` and `students` are used interchangeably in user stories and 
     * 3b1. TAA rejects the command.
     * 3b2. User re-enters command with the missing fields.
 
-      Use case resumes at step 3.
+        Use case resumes at step 3.
   
 * 3c. An edited field value is invalid.
 
@@ -728,13 +728,11 @@ Preconditions: A group is currently active.
 **Extensions**
 
 * 1a. No group is currently active.
-
     * 1a1. TAA shows an error message.
 
         Use case ends.
 
 * 1b. The file cannot be written (e.g., invalid path or insufficient permissions).
-
     * 1b1. TAA shows an error message.
 
         Use case ends.
