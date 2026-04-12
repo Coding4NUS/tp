@@ -608,23 +608,14 @@ Examples:
 
 Deletes an accidentally created session for the current group or a specified group.
 
-Format: `deletesession [confirm] d/YYYY-MM-DD [g/GROUP_NAME]`
+Format: `deletesession d/YYYY-MM-DD [g/GROUP_NAME]`
 
 * Removes that date's attendance/participation session across all students in the group.
 * If `g/GROUP_NAME` is omitted, the session is deleted from the current group view.
 * If the deleted date is currently highlighted in `view`, the highlight is cleared.
-* The command asks for confirmation first. Re-run the same command with `confirm` in front to proceed.
-
-<box type="tip">
-
-**TIP:**
-If you are sure about deleting the session, you can run `deletesession confirm d/YYYY-MM-DD [g/GROUP_NAME]` to skip the confirmation prompt
-and delete the session immediately.
-</box>
 
 Examples:
 * `deletesession d/2026-03-16`
-* `deletesession confirm d/2026-03-16`
 * `deletesession d/2026-03-16 g/T01`
 
 <div style="page-break-after: always;"></div>
