@@ -98,6 +98,8 @@ public class MatricNumber {
      * @return Checksum character for matriculation number.
      */
     private static char calculateChecksum(String matricNumber) {
+        // Implementation was made on our own.
+        // Based on algorithm in http://interrobeng.com/2014/01/19/nus-matriculation-number-check-digit-algorithm/
         assert matricNumber.length() == EXPECTED_MATRIC_NUMBER_LENGTH
                 : "Matriculation number length should be 9";
         String digits = matricNumber.substring(DIGITS_START_INDEX, DIGITS_END_INDEX);
