@@ -142,6 +142,7 @@ Adds a student contact to TAA.
 Format: `add n/NAME p/PHONE e/EMAIL m/MATRIC_NUMBER [t/TAG]…​`
 
 * Name cannot contain symbols like `;` and `<>`.
+* Name can contain apostrophes but they cannot be trailing (at the end of the name)
 * Name can only be up to 300 characters long.
 * Email must be in the format local-part@domain.
 * Matric number must start with `A` followed by 7 digits and end with a valid checksum letter.
@@ -193,7 +194,7 @@ Examples:
 
 ### Locating persons by parameters: `find`
 
-Finds and lists people whose fields match any of the given parameters.
+Finds and lists people whose fields match any of the given parameters in the current group.
 
 Format: `find [n/NAME]... [p/PHONE]... [e/EMAIL]... [m/MATRIC_NUMBER]... [t/TAG]...`
 
@@ -222,7 +223,7 @@ Format: `delete i/INDEX`
 
 Examples:
 * `list` followed by `delete i/2` deletes the 2nd contact in TAA.
-* `find Betsy` followed by `delete i/1` deletes the 1st contact in the results of the `find` command.
+* `find n/Betsy` followed by `delete i/1` deletes the 1st contact in the results of the `find` command.
 
 ### Clearing all entries : `clear`
 
@@ -347,6 +348,7 @@ Format: `part i/INDEX_EXPRESSION d/YYYY-MM-DD pv/PARTICIPATION_VALUE`
 * The index **must be a positive integer** 1, 2, 3, …​
 * The participation will be assigned for the group in current view.
 * PARTICIPATION_VALUE **must be an integer from 0 to 5.**
+* A participation level can be assigned to an absent student to account for home assignments.
 
 Examples:
 *  `part i/1 d/2026-03-16 pv/4` Assigns a participation level of 4 on the 16 of March 2026 for the contact of index 1 for the list in the current view.
@@ -775,7 +777,7 @@ If your changes to the save file makes its format invalid, TAA will not load you
 | **Delete Assignment**             | `deleteassignment a/ASSIGNMENT_NAME` <br/>`deletea a/ASSIGNMENT_NAME` <br> e.g., `deleteassignment a/Quiz 1`                                                                                                                                                                                                                                                                                           |
 | **Delete Group**                  | `deletegroup g/GROUP_NAME` <br> e.g., `deletegroup g/T01`                                                                                                                                                                                                                                                                                                                                              |
 | **Delete Session**                | `deletesession [confirm] d/YYYY-MM-DD [g/GROUP_NAME]` <br> e.g., `deletesession confirm d/2026-03-16 g/T01`                                                                                                                                                                                                                                                                                            |
-| **Edit**                          | `edit i/INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​`<br> e.g.,`edit i/2 n/James Lee e/jameslee@example.com`                                                                                                                                                                                                                                                                                    |
+| **Edit**                          | `edit i/INDEX [n/NAME] [p/PHONE] [e/EMAIL] [m/MATRIC_NUMBER] [t/TAG]…​` <br> e.g.,`edit i/2 n/James Lee e/jameslee@example.com`                                                                                                                                                                                                                                                                        |
 | **Edit Assignment**               | `editassignment a/ASSIGNMENT_NAME na/NEW_ASSIGNMENT_NAME d/NEW_DUE_DATE mm/NEW_MAX_MARKS` <br/>`edita a/ASSIGNMENT_NAME na/NEW_ASSIGNMENT_NAME d/NEW_DUE_DATE mm/NEW_MAX_MARKS` <br> e.g., `editassignment a/Quiz 1 na/Test d/2026-04-08 mm/25`                                                                                                                                                        |
 | **Exit**                          | `exit`                                                                                                                                                                                                                                                                                                                                                                                                 |
 | **Find**                          | `find [n/NAME]... [p/PHONE]... [e/EMAIL]... [m/MATRIC_NUMBER]... [t/TAG]...`<br> e.g., `find n/john p/987 e/example.com m/123 t/friend`                                                                                                                                                                                                                                                                |
