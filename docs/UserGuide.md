@@ -638,7 +638,7 @@ Exports the currently displayed `view` matrix to a CSV-formatted file. <br>
 
 Format: `exportview [f/FILE_NAME.csv]`
 
-* Exports the currently displayed rows and the session columns currently visible in `view `.
+* Exports the currently displayed rows and the session columns currently visible in `view g/GROUP_NAME`.
 * If no file name is provided, TAA will write to `[JAR file location]/view-export.csv`.
 * If a file name is provided, TAA will write to `[JAR file location]/[FILE_NAME]`
 
