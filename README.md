@@ -13,5 +13,5 @@
   * It includes comprehensive **user and developer documentation** to support both usage and future development.
 
   📖 Documentation
-  * This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
   * For the detailed documentation of this project, see the **[Teacher Assistant's Assistant Product Website](https://ay2526s2-cs2103t-f14-1.github.io/tp/)**.
+  * This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
