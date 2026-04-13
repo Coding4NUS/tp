@@ -102,6 +102,7 @@ cd ~/Downloads/TAA && java -jar TAA.jar
 
 **Related FAQs:**
 * [What happens when I launch TAA for the first time?](#faq-first_time)
+* [Can I resize the input bar and result display?](#faq-resize)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -886,6 +887,11 @@ If your changes to the save file makes its format invalid, TAA will not load you
 When you first launch TAA, a `data` folder should be created containing `TAA_savefile.json`, which is where the data is stored.
 <br> Sample data will be populated onto TAA. To clear all existing data and begin your use of TAA, run the command `clear`.
 
+</panel>
+
+<panel id="faq-resize" header="Can I resize the input bar and result display?" type="seamless" expanded>
+
+You can drag the divider between the command input bar and the result display, and the divider between the result display and the contact list, to resize them to fit your display as needed.
 </panel>
 
 <panel id="faq-backup" header="How do I back up my data?" type="seamless" expanded>
