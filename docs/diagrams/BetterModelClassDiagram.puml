@@ -23,8 +23,6 @@ Class Person
 Class I #FFFFFF
 }
 
-Class HiddenOutside #FFFFFF
-
 ModelManager -left-> "1" AddressBook
 ModelManager -right-> "1" UserPrefs
 

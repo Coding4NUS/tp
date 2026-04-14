@@ -1,0 +1,12 @@
+coverage:
+  ignore:
+    - "tp/src/main/java/seedu/address/ui"
+    - "tp/src/main/java/seedu/address/Main.java"
+    - "tp/src/main/java/seedu/address/MainApp.java"
+  status:
+    project:
+      default:
+        target: 80%
+    patch:
+      default:
+        target: 80%

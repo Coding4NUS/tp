@@ -4,7 +4,11 @@ title: "Developer Guide"
 pageNav: 3
 ---
 
-# TAA Developer Guide
+<div style="font-size: 2.5rem; font-weight: normal;">
+
+TAA Developer Guide
+
+</div>
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -104,7 +108,7 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 -> <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete 1` Command" width="850px"/> <-
 
-<box type="info" seamless>
+<box type="info" light>
 
 **Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 
@@ -156,11 +160,11 @@ The `Model` component,
 * stores a `UserPrefs` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPrefs` object.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
-<box type="info" seamless>
+<box type="info" light>
 
 **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
 
--> <puml src="diagrams/BetterModelClassDiagram.puml" width="600px"/> <-
+-> <puml src="diagrams/BetterModelClassDiagram.puml" width="500px"/> <-
 
 </box>
 
@@ -176,7 +180,7 @@ The sequence diagram below illustrates the interactions within the `Storage` com
 
 -> <puml src="diagrams/StorageLoadSequenceDiagram.puml" width="600px"/> <-
 
-<box type="info" seamless>
+<box type="info" light>
 
 **Note:** The lifeline for `JsonSerializableAddressBook` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 
@@ -342,7 +346,7 @@ Step 3. The user executes `add n/David …​` to add a new person. The `add` co
 
 -> <puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" width="400px"/> <-
 
-<box type="info" seamless>
+<box type="info" light>
 
 **Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
 
@@ -354,7 +358,7 @@ Step 4. The user now decides that adding the person was a mistake, and decides t
 
 -> <puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" width="400px"/> <-
 
-<box type="info" seamless>
+<box type="info" light>
 
 **Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
 than attempting to perform the undo.
@@ -365,7 +369,7 @@ The following sequence diagram shows how an undo operation goes through the `Log
 
 -> <puml src="diagrams/UndoSequenceDiagram-Logic.puml" alt="UndoSequenceDiagram-Logic" width="550px"/> <-
 
-<box type="info" seamless>
+<box type="info" light>
 
 **Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
 
@@ -377,7 +381,7 @@ Similarly, how an undo operation goes through the `Model` component is shown bel
 
 The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
 
-<box type="info" seamless>
+<box type="info" light>
 
 **Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
 
@@ -444,7 +448,7 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-<box type="info" seamless>
+<box type="info" light>
 
 The term `contacts` and `students` are used interchangeably in user stories and use cases.
 
@@ -1152,8 +1156,6 @@ testers are expected to do more *exploratory* testing.
    * Prerequisite: First contact has matric number `A1234567X`.
    * Expected: `A person with the same matric number already exists.` error message.
 
-<div style="page-break-after: always;"></div>
-
 ### Deleting a contact
 
 1. Prerequisites: At least one contact is visible in the list.
@@ -1237,8 +1239,6 @@ testers are expected to do more *exploratory* testing.
 
 4. Test case: `switchgroup g/T99`
     * Expected: `This group does not exist.` error message.
-
-<div style="page-break-after: always;"></div>
 
 ### Adding a contact to a group
 
@@ -1330,8 +1330,6 @@ testers are expected to do more *exploratory* testing.
 5. Test case: `addsession d/2026-13-01`
     * Expected: `Invalid month: 13. Month must be between 01 and 12.` error message.
 
-<div style="page-break-after: always;"></div>
-
 ### Editing a session
 
 1. Prerequisite: Session on `2026-04-10` exists in `2026-S1-T01`.
@@ -1421,8 +1419,6 @@ testers are expected to do more *exploratory* testing.
 
 4. Test case: `part i/1 d/2026-04-10 pv/abc`
     * Expected: `Invalid command format!...` error message.
-
-<div style="page-break-after: always;"></div>
 
 ### Viewing attendance and participation
 
@@ -1531,12 +1527,12 @@ testers are expected to do more *exploratory* testing.
 <p></p>
 
 5. Test case: `gradea a/Quiz 2 i/1 gr/100`
-    * Expected: `Grade must be between 0 and 10 (the assignment's max marks) inclusive.` error message.
+    * Expected: `Grade should be a non-negative number with at most 3 decimal places.` error message
 
 <p></p>
 
 6. Test case: `gradea a/Quiz 2 i/1 gr/-1`
-    * Expected: `Grade should be a non-negative number with at most 3 decimal places.` error message.
+    * Expected: `Grade should be a non-negative integer.` error message.
 
 ### Deleting an assignment
 
@@ -1596,8 +1592,6 @@ testers are expected to do more *exploratory* testing.
 1. Test case: `exit`
     * Expected: The application closes.
 
-<div style="page-break-after: always;"></div>
-
 ### Saving and reloading data
 
 1. Add a contact: `add n/Test User p/81111111 e/test@example.com m/A0308002Y`.
@@ -1610,6 +1604,8 @@ testers are expected to do more *exploratory* testing.
 
 3. Re-launch TAA using `java -jar TAA.jar`.
     * Expected: The contact `Test User` is still present.
+
+<div style="page-break-after: always;"></div>
 
 ### Handling corrupted or edge-case save files
 
@@ -1678,6 +1674,8 @@ Back up the file before each test if you intend to continue using the existing d
       * That contact is skipped. 
       * A load warning is displayed. 
       * Other contacts load normally.
+
+<div style="page-break-after: always;"></div>
 
 ## Appendix: Effort
 

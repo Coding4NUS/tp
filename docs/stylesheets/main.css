@@ -1,3 +1,7 @@
+/* Ensure code-highlight string/inline colours are consistent across MarkBind rebuilds */
+.hljs-doctag, .hljs-string { color: #a03c96 !important; }
+.hljs.inline.no-lang { color: #a03c96 !important; }
+
 mark {
   background-color: #ff0;
   border-radius: 5px;
@@ -136,16 +140,20 @@ mark {
 
   /* Reduce font size when printing */
   h1 {
-      font-size: 1.2rem !important;
+      font-size: 2rem !important;
+      font-weight: normal;
   }
   h2 {
-      font-size: 1.0rem !important;
+      font-size: 1.5rem !important;
+      font-weight: bold;
   }
   h3 {
-      font-size: 0.9rem !important;
+      font-size: 1rem !important;
+      font-weight: bold;
   }
   h4 {
       font-size: 0.8rem !important;
+      font-weight: bold;
   }
   h5 {
       font-size: 0.7rem !important;
@@ -164,7 +172,7 @@ mark {
   .page-nav-print a.nav-link {
       padding-top: 1px !important;
       padding-bottom: 1px !important;
-      line-height: 1.5;
+      line-height: 1.3;
   }
 }
 

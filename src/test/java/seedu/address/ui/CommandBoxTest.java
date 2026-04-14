@@ -240,6 +240,25 @@ public class CommandBoxTest {
         assertEquals("help", result);
     }
 
+    // ==================== Tests for alias short-form commands ====================
+
+    @Test
+    public void extractCommandWord_shortFormAlias_extractsCorrectly() {
+        // e.g. "ca n/Assignment1" should extract "createa", not "createassignment"
+        // so the alias map lookup (not COMMAND_ATTRIBUTES) is responsible for resolving it
+        String result = CommandBox.extractCommandWord("createa n/Assignment1");
+        assertEquals("createa", result);
+    }
+
+    @Test
+    public void findSuggestion_shortFormAlias_notSuggestedByAutocomplete() {
+        // Short form aliases are intentionally absent from COMMAND_SUGGESTIONS,
+        // so autocomplete should not complete to them
+        List<String> longFormOnly = List.of("createassignment", "editassignment", "deleteassignment");
+        String result = CommandBox.findSuggestion("createa", longFormOnly);
+        assertEquals(result, "createassignment"); // not "createa"
+    }
+
     // ==================== Integration-like tests ====================
 
     @Test
