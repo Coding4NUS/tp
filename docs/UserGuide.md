@@ -34,9 +34,17 @@ You can refer to [this guide](https://se-education.org/guides/tutorials/javaInst
 
 </box>
 
-2. Download the latest version of the app (called `TAA.jar`) from [our GitHub page here](https://github.com/AY2526S2-CS2103T-F14-1/tp/releases/latest).
+<br>
+
+2. Download the latest version of the app (called `TAA.jar`) from [our GitHub page here](https://github.com/AY2526S2-CS2103T-F14-1/tp/releases/latest):
+
+<img src="images/GitHubAssets.png" alt="Ui" width="600">
+
+<br>
 
 3. Move `TAA.jar` into a new folder used to contain the app's data. We recommend naming this folder "TAA App Folder" and putting it in your Downloads folder.
+
+<br>
 
 4. To launch TAA, open a command terminal and follow these instructions:
 
@@ -74,6 +82,17 @@ java -jar TAA.jar
 You should see TAA launch:
 <p></p>
 <img src="images/Ui.png" alt="Ui" width="850">
+
+<box type="success" light>
+
+Once TAA is running, you can start by learning about the app's [Core Concepts](#core-concepts) to understand what the app can do.
+Then, continue onto the [Recommended Workflows](#recommended-workflows) how see how the app can fit into your workflows.
+
+You can refer to the [Features](#feature-managing-students) section for detailed command documentation.
+
+Finally, to clear all existing demo data and begin your use of TAA, run `clear`.
+
+</box>
 
 ---
 
@@ -249,16 +268,6 @@ Most workflows follow this pattern:
 
 --------------------------------------------------------------------------------------------------------------------
 
-<box type="success" light>
-
-Once TAA is running, you can begin by following the [Recommended Workflows](#recommended-workflows) to understand how to use the app effectively.
-
-You can also refer to the [Features](#feature-managing-students) section for detailed command documentation.
-
-To clear all existing data and begin your use of TAA, run `clear`.
-
-</box>
-
 <div style="page-break-after: always;"></div>
 
 ## Command Parameters and their Rules
@@ -427,11 +436,11 @@ Rules:
 
 The `mm/MAX_MARKS` parameter refers to the maximum marks (grade) for an Assignment.
 
-Allowed value: Whole number from 1 to 2147483647 (this number is the technical limit)
+* Allowed value: A whole number from 1 to 2147483647 (this number is the technical limit)
 
 The `gr/GRADE` parameter refers to the grade (marks) for an Assignment given to a Student.
 
-Allowed value: 2-decimal-place number from 0 to MAX_MARKS
+* Allowed value: A 3-decimal-place number from 0 to MAX_MARKS
 
 ---
 
@@ -495,20 +504,20 @@ Examples:
 
 ### Locating students by parameters: `find`
 
-Finds and lists people whose fields match any of the given parameters in the current group.
+Finds and lists students whose fields match any of the given parameters in the current group.
 
 Format: `find [n/NAME]... [p/PHONE]... [e/EMAIL]... [m/MATRIC_NUMBER]... [t/TAG]...`
 
 * At least one parameter must be provided.
 * The search is case-insensitive. e.g `n/john` will match the name `John`
 * The search lists partial matches. e.g. `n/john` will match the name `John Doe`
-* People matching at least one parameter will be listed (i.e. `OR` search) though people who match more parameters will be listed first.
-* Multiple of the same parameter type can be used. e.g. `find n/alex n/david` returns a list of people with names containing `alex` or `david`
+* students matching at least one parameter will be listed (i.e. `OR` search) though students who match more parameters will be listed first.
+* Multiple of the same parameter type can be used. e.g. `find n/alex n/david` returns a list of students with names containing `alex` or `david`
 
 Examples:
-* `find n/john` returns people with the names `john` and `John Doe`
-* `find n/john p/987 e/example.com m/123 t/scholar` returns people with a name containing `john`, a phone number containing `987`, an email containing `example.com`, a matric number containing `123` or a tag containing `scholar`
-* `find n/alex n/david` returns the people `Alex Yeoh`, `David Li`<br>
+* `find n/john` returns students with the names `john` and `John Doe`
+* `find n/john p/987 e/example.com m/123 t/scholar` returns students with a name containing `john`, a phone number containing `987`, an email containing `example.com`, a matric number containing `123` or a tag containing `scholar`
+* `find n/alex n/david` returns the students `Alex Yeoh`, `David Li`<br>
   
   <img src="images/findAlexDavidResult.png" alt="result for 'find alex david'" width="700">
 
@@ -730,7 +739,11 @@ Shows the attendance and participation overview for the current group. <br>
 
 Format: `view [STATUS] [d/YYYY-MM-DD] [from/YYYY-MM-DD] [to/YYYY-MM-DD] [g/GROUP_NAME] `
 
-Note: You can use `view g/GROUP_NAME` as a shortcut to switch groups.
+<box type="tip" light>
+
+**Tip:** You can supply `[g/GROUP_NAME]` as a shortcut to [`switchgroup`](#switching-view-of-groups-switchgroup).
+
+</box>
 
 After using `view d/YYYY-MM-DD`, you can use shorthand follow-up commands without repeating the date or group:
 * `mark i/1`
@@ -789,7 +802,7 @@ You will not be able to run assignment-related commands outside a group.
 
 ### Create assignment: `createassignment` (`createa`)
 
-Creates an assignment for people in the current group with a due date and maximum marks.
+Creates an assignment for students in the current group with a due date and maximum marks.
 
 Format:
 * `createassignment a/ASSIGNMENT_NAME d/DUE_DATE mm/MAX_MARKS`
@@ -812,7 +825,7 @@ When a student is removed from a group, their grades for that group’s assignme
 
 ### Edit assignment: `editassignment` (`edita`)
 
-Edits an existing assignment for people in the current group .
+Edits an existing assignment for students in the current group .
 
 Format: 
 * `editassignment a/ASSIGNMENT_NAME [na/NEW_ASSIGNMENT_NAME] [d/NEW_DUE_DATE] [mm/NEW_MAX_MARKS]`
@@ -847,7 +860,7 @@ Format:
 
 ### Grade assignment: `gradeassignment` (`gradea`)
 
-Grades an assignment for people in the current group.
+Grades an assignment for students in the current group.
 
 Format:
 * `gradeassignment a/ASSIGNMENT_NAME i/INDEX_EXPRESSION gr/GRADE`
@@ -1306,6 +1319,8 @@ You can also refer to `loadWarnings` in the save file to see the errors for each
 You can fix the invalid student details by editing them in the `preservedSkippedPersons` section of the save file.<br>
 Once these students are valid, TAA will automatically load these students on the next run and clear the `loadWarnings`.
 
+<div style="page-break-after: always;"></div>
+
 <panel header="Here's an example of how `preservedSkippedPersons` looks like if you run TAA with an invalid student!" type="seamless" expanded>
 
 ```json
@@ -1441,23 +1456,24 @@ Rerun TAA and group `T02` will exist. `John` will also be loaded into the contac
 You should refer to this section to find out more about some common errors faced when manually editing the save file.
 
 ### Troubleshooting manual editing of students
-| Error shown                                                                                                               | How to fix                                                                                                                                                  |
-|:--------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Name cannot be blank, must be at most 300 characters long and characters like semicolons and <> are invalid.`            | Ensure that `Name` follows the constraints given in the error message. <br>For full list, refer to [this FAQ](#command-parameters-and-their-rules).         |
-| `Phone numbers should not be blank, should only contain numbers, and should be at least 3 digits long`                    | Ensure that `Phone` follows the constraints given in the error message. <br>For full list, refer to [this FAQ](#command-parameters-and-their-rules).        |
-| `Matric number should not be blank and should start with 'A', followed by 7 digits and end with a valid checksum letter.` | Ensure that `matricNumber` follows the constraints given in the error message. <br>For full list, refer to [this FAQ](#command-parameters-and-their-rules). |
-| `The matric number checksum letter is incorrect. For the given digits, it should be 'X'.`                                 | Change the last character of the `matricNumber` (checksum) to the correct one as given in the error message.                                                |
-| `Skipped duplicate contact: NAME (Matric: AXXXXXXXA)`                                                                     | Delete the duplicate from `"preservedSkippedPersons": [ ]`, or change their matric number to a unique one not currently in TAA.                             |
-| `Contact references group 'Y' which does not exist yet.`                                                                  | Ensure that the group exists in `"groups": [ ]` of the save file. <br> This is not the same `"groups": [ ]` as the one found in `"persons": [ ]`.           |                                                                                                                                                   |
-| `Contact has grades for group 'X' but is not a member of it`                                                              | Add the respective group into `"groups": [ ]` for that student under `"persons": [ ]`.                                                                      |
-| `Contact has a grade for assignment 'X' in group 'Y', but that assignment does not exist`                                 | Add the assignment into `"groups": [ ]`.<br> This is not the same `"groups": [ ]` as the one found in `"persons": [ ]`.                                     |
-| `Grade A for assignment 'X' in group 'Y' exceeds max marks of B`                                                          | Ensure that grade is below max marks for the assignment.                                                                                                    |
-| `Contact has sessions for group 'X' but is not a member of it`                                                            | Ensure that student has matching groups in `"groups": [ ]` and `"groupSessions": { }` in `"persons": [ ]`.                                                  |
+| Error shown                                                                                                                                 | How to fix                                                                                                                                                       |
+|:--------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name cannot be blank, must be at most 300 characters long and characters like semicolons and `<` `>` are invalid.                           | Ensure that `Name` follows the constraints given in the error message. <br>For full list, refer to [this section](#command-parameters-and-their-rules).          |
+| Phone number should not be blank, have between 3-20 digits, and contain only digits, brackets for area code, or plus sign for country code. | Ensure that `Phone` follows the constraints given in the error message. <br>For full list, refer to [this section](#command-parameters-and-their-rules).         |
+| Matric number should not be blank and should start with 'A', followed by 7 digits and end with a valid checksum letter.                     | Ensure that `Matric Number` follows the constraints given in the error message. <br>For full list, refer to [this section](#command-parameters-and-their-rules). |
+| Email cannot be empty. It should be in the format `local-part@domain` (e.g. johndoe@example.com)                                            | Ensure that `Email` follows the constraints given in the error message. <br>For full list, refer to [this section](#command-parameters-and-their-rules).         |
+| The matric number checksum letter is incorrect. For the given digits, it should be `X`.                                                     | Change the last character of the `matricNumber` (checksum) to the correct one as given in the error message.                                                     |
+| Skipped duplicate contact: `NAME` (Matric: `AXXXXXXXA`)                                                                                     | Delete the duplicate from `"preservedSkippedPersons": [ ]`, or change their matric number to a unique one not currently in TAA.                                  |
+| Contact references group `X` which does not exist yet.                                                                                      | Ensure that the group exists in `"groups": [ ]` of the save file. <br> This is not the same `"groups": [ ]` as the one found in `"persons": [ ]`.                |                                                                                                                                                   |
+| Contact has grades for group `X` but is not a member of it                                                                                  | Add the respective group into `"groups": [ ]` for that student in `"persons": [ ]`.                                                                              |
+| Contact has a grade for assignment `X` in group `Y`, but that assignment does not exist                                                     | Add the assignment into `"groups": [ ]`.<br> This is not the same `"groups": [ ]` as the one found in `"persons": [ ]`.                                          |
+| Grade `A` for assignment `X` in group `Y` exceeds max marks of `B`                                                                          | Ensure that grade is below max marks for the assignment.                                                                                                         |
+| Contact has sessions for group `X` but is not a member of it                                                                                | Ensure that student has matching groups in `"groups": [ ]` and `"groupSessions": { }` in `"persons": [ ]`.                                                       |
 
 ### Troubleshooting manual editing of groups
-| Error shown                                                                                                      | How to fix                                                                                                                     |
-|:-----------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
-| `Group names should only contain letters, numbers, spaces, hyphens, and underscores, and it should not be blank` | Ensure that the group name follows the constraints given in the error message.                                                 |
-| `Skipped duplicate group: 'X'`                                                                                   | Delete the group by deleting `{ "name": "X", "assignments": [ ] }` from `"preservedSkippedGroups": [ ]` , or rename the group. |
-| `Assignment names should only contain alphanumeric characters and spaces, and should not be blank`               | Ensure that the assignment name follows the constraints given in the error message.                                            |
-| `Max marks should be an integer between 1 and 2147483647`                                                        | Ensure that max marks is a positive integer from 1 to 2147483647 (this number is the technical limit).                         |
+| Error shown                                                                                                      | How to fix                                                                                                                                                      |
+|:-----------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Group names should only contain letters, numbers, spaces, hyphens, and underscores, and it should not be blank` | Ensure that the group name follows the constraints given in the error message. <br>For full list, refer to [this section](#command-parameters-and-their-rules). |
+| `Skipped duplicate group: 'X'`                                                                                   | Delete the group by deleting `{ "name": "X", "assignments": [ ] }` from `"preservedSkippedGroups": [ ]` , or rename the group.                                  |
+| `Assignment names should only contain alphanumeric characters and spaces, and should not be blank`               | Ensure that the assignment name follows the constraints given in the error message.                                                                             |
+| `Max marks should be an integer between 1 and 2147483647`                                                        | Ensure that max marks is a positive integer from 1 to 2147483647 (this number is the technical limit).                                                          |
